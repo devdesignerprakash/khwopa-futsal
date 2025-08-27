@@ -13,8 +13,8 @@ const Contact = () => {
           <form className="flex flex-col space-y-4">
             <Input placeholder="Your Name" />
             <Input placeholder="Email Address" type="email" />
-            <Textarea placeholder="Your Message" rows="5" />
-            <Button className="w-full md:w-fit self-center md:self-start">Submit</Button>
+            <Textarea placeholder="Your Message" rows={5}/>
+            <Button className="w-full md:w-fit self-center md:self-start bg-[#122754] hover:bg-[#122754] cursor-pointer">Submit</Button>
           </form>
         </div>
 
@@ -25,7 +25,6 @@ const Contact = () => {
             width="100%"
             height="100%"
             style={{ border: 0 }}
-            allowFullScreen=""
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
             className="w-full h-[400px] md:h-full"
