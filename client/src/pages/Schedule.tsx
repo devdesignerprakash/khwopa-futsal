@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
-import Footer from "../components/Footer";
 
+import {useState,useEffect} from 'react';
 
 export default function Schedule() {
   const [schedule, setSchedule] = useState([]);
@@ -81,9 +80,6 @@ export default function Schedule() {
         </table>
       </div>
     </div>
-   <div>
-     <Footer/>
-   </div>
     </>
   );
 }

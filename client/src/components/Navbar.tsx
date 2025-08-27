@@ -33,18 +33,18 @@ const Navbar = () => {
                  hover:after:w-full">
                             Schedule
                         </Link>
-                        <li className="relative font-bold text-sm cursor-pointer 
+                        <Link to="/booking" className="relative font-bold text-sm cursor-pointer 
                  after:content-[''] after:absolute after:w-0 after:h-[2px] after:left-0 after:-bottom-1 
                  after:bg-[#122754] after:transition-all after:duration-300 
                  hover:after:w-full">
                             Bookings
-                        </li>
-                        <li className="relative font-bold text-sm cursor-pointer 
+                        </Link>
+                        <Link to="/contact"className="relative font-bold text-sm cursor-pointer 
                  after:content-[''] after:absolute after:w-0 after:h-[2px] after:left-0 after:-bottom-1 
                  after:bg-[#122754] after:transition-all after:duration-300 
                  hover:after:w-full">
                            Contacts
-                        </li>
+                        </Link>
                     </ul>
                 </div>
                 <div className='flex gap-4 items-center'>

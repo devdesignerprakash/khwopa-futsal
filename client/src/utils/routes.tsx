@@ -7,6 +7,9 @@ import Schedule from "../pages/Schedule";
 import Login from "../auth/Login";
 import SignUp from "../auth/SignUp";
 import ForgetPassword from "../pages/ForgetPassword";
+import Bookings from "../pages/Bookings";
+import Contact from "../pages/Contact";
+
 
 
 const router = createBrowserRouter([{
@@ -26,6 +29,13 @@ const router = createBrowserRouter([{
         path: "/schedule",
         element: <Schedule />
     },
+    {
+        path:"/booking",
+        element:<Bookings/>
+    },{
+        path:"/contact",
+        element:<Contact/>
+    }
 
     ],
 },
