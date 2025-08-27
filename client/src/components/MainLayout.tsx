@@ -1,0 +1,24 @@
+import { Outlet } from "react-router-dom"
+import Navbar from "./Navbar.tsx"
+
+
+const MainLayout = () => {
+  return (
+   <div className="flex flex-col min-h-screen">
+  {/* Navbar */}
+  <div>
+    <Navbar />
+  </div>
+
+  {/* Main Content */}
+  <main className="flex-1 bg-gray-100 pt-4 px-4 md:px-8">
+    <Outlet />
+  </main>
+
+  {/* Optional Footer can go here */}
+</div>
+
+  )
+}
+
+export default MainLayout

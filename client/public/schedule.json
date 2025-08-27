@@ -1,0 +1,103 @@
+{
+  "week": "2025-08-26 to 2025-09-01",
+  "schedule": [
+    {
+      "day": "Monday",
+      "date": "2025-08-26",
+      "slots": [
+        { "start_time": "06:00", "end_time": "07:00", "status": "available" },
+        { "start_time": "07:00", "end_time": "08:00", "status": "booked", "team": "Street Kings" },
+        { "start_time": "08:00", "end_time": "09:00", "status": "booked", "team": "Goal Diggers" },
+        { "start_time": "09:00", "end_time": "10:00", "status": "available" },
+        { "start_time": "17:00", "end_time": "18:00", "status": "booked", "team": "United FC" },
+        { "start_time": "18:00", "end_time": "19:00", "status": "booked", "team": "Ballers" },
+        { "start_time": "19:00", "end_time": "20:00", "status": "available" },
+        { "start_time": "20:00", "end_time": "21:00", "status": "booked", "team": "Legends" }
+      ]
+    },
+    {
+      "day": "Tuesday",
+      "date": "2025-08-27",
+      "slots": [
+        { "start_time": "06:00", "end_time": "07:00", "status": "booked", "team": "Morning Kickers" },
+        { "start_time": "07:00", "end_time": "08:00", "status": "available" },
+        { "start_time": "08:00", "end_time": "09:00", "status": "available" },
+        { "start_time": "09:00", "end_time": "10:00", "status": "booked", "team": "Futsal Bros" },
+        { "start_time": "17:00", "end_time": "18:00", "status": "available" },
+        { "start_time": "18:00", "end_time": "19:00", "status": "booked", "team": "Power Strikers" },
+        { "start_time": "19:00", "end_time": "20:00", "status": "booked", "team": "Nepal United" },
+        { "start_time": "20:00", "end_time": "21:00", "status": "available" }
+      ]
+    },
+    {
+      "day": "Wednesday",
+      "date": "2025-08-28",
+      "slots": [
+        { "start_time": "06:00", "end_time": "07:00", "status": "available" },
+        { "start_time": "07:00", "end_time": "08:00", "status": "booked", "team": "Street Kings" },
+        { "start_time": "08:00", "end_time": "09:00", "status": "available" },
+        { "start_time": "09:00", "end_time": "10:00", "status": "booked", "team": "Legends" },
+        { "start_time": "17:00", "end_time": "18:00", "status": "booked", "team": "Goal Diggers" },
+        { "start_time": "18:00", "end_time": "19:00", "status": "available" },
+        { "start_time": "19:00", "end_time": "20:00", "status": "booked", "team": "Ballers" },
+        { "start_time": "20:00", "end_time": "21:00", "status": "booked", "team": "United FC" }
+      ]
+    },
+    {
+      "day": "Thursday",
+      "date": "2025-08-29",
+      "slots": [
+        { "start_time": "06:00", "end_time": "07:00", "status": "booked", "team": "Futsal Warriors" },
+        { "start_time": "07:00", "end_time": "08:00", "status": "available" },
+        { "start_time": "08:00", "end_time": "09:00", "status": "booked", "team": "Morning Kickers" },
+        { "start_time": "09:00", "end_time": "10:00", "status": "available" },
+        { "start_time": "17:00", "end_time": "18:00", "status": "booked", "team": "Nepal United" },
+        { "start_time": "18:00", "end_time": "19:00", "status": "available" },
+        { "start_time": "19:00", "end_time": "20:00", "status": "booked", "team": "Street Kings" },
+        { "start_time": "20:00", "end_time": "21:00", "status": "booked", "team": "Legends" }
+      ]
+    },
+    {
+      "day": "Friday",
+      "date": "2025-08-30",
+      "slots": [
+        { "start_time": "06:00", "end_time": "07:00", "status": "available" },
+        { "start_time": "07:00", "end_time": "08:00", "status": "booked", "team": "Goal Diggers" },
+        { "start_time": "08:00", "end_time": "09:00", "status": "booked", "team": "Ballers" },
+        { "start_time": "09:00", "end_time": "10:00", "status": "available" },
+        { "start_time": "17:00", "end_time": "18:00", "status": "booked", "team": "Legends" },
+        { "start_time": "18:00", "end_time": "19:00", "status": "booked", "team": "Power Strikers" },
+        { "start_time": "19:00", "end_time": "20:00", "status": "available" },
+        { "start_time": "20:00", "end_time": "21:00", "status": "booked", "team": "United FC" }
+      ]
+    },
+    {
+      "day": "Saturday",
+      "date": "2025-08-31",
+      "slots": [
+        { "start_time": "06:00", "end_time": "07:00", "status": "booked", "team": "Street Kings" },
+        { "start_time": "07:00", "end_time": "08:00", "status": "booked", "team": "Morning Kickers" },
+        { "start_time": "08:00", "end_time": "09:00", "status": "available" },
+        { "start_time": "09:00", "end_time": "10:00", "status": "available" },
+        { "start_time": "17:00", "end_time": "18:00", "status": "booked", "team": "Futsal Bros" },
+        { "start_time": "18:00", "end_time": "19:00", "status": "available" },
+        { "start_time": "19:00", "end_time": "20:00", "status": "booked", "team": "Nepal United" },
+        { "start_time": "20:00", "end_time": "21:00", "status": "booked", "team": "Ballers" }
+      ]
+    },
+    {
+      "day": "Sunday",
+      "date": "2025-09-01",
+      "slots": [
+        { "start_time": "06:00", "end_time": "07:00", "status": "available" },
+        { "start_time": "07:00", "end_time": "08:00", "status": "booked", "team": "Power Strikers" },
+        { "start_time": "08:00", "end_time": "09:00", "status": "available" },
+        { "start_time": "09:00", "end_time": "10:00", "status": "booked", "team": "United FC" },
+        { "start_time": "17:00", "end_time": "18:00", "status": "booked", "team": "Legends" },
+        { "start_time": "18:00", "end_time": "19:00", "status": "available" },
+        { "start_time": "19:00", "end_time": "20:00", "status": "booked", "team": "Goal Diggers" },
+        { "start_time": "20:00", "end_time": "21:00", "status": "booked", "team": "Street Kings" }
+      ]
+    }
+  ]
+}
