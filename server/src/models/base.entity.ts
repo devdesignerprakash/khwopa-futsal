@@ -1,12 +1,12 @@
-import { BeforeInsert, Entity,PrimaryGeneratedColumn } from "typeorm";
-import { v4 as uuidv4 } from 'uuid';
+import { BeforeInsert, CreateDateColumn, Entity,PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
 export class BaseEntity{
     @PrimaryGeneratedColumn("uuid")
     id:string
-    @BeforeInsert()
-    genrateId(){
-        this.id=uuidv4()
-    }
+    @CreateDateColumn({ type: 'timestamp' })
+    createdAt: Date;
+
+    @UpdateDateColumn({ type: 'timestamp' })
+    updatedAt: Date;
 }

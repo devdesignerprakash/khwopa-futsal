@@ -1,7 +1,8 @@
-import { Entity, Column, BeforeInsert } from "typeorm";
+import { Entity, Column, BeforeInsert, OneToMany } from "typeorm";
 import { BaseEntity } from "./base.entity";
 import bcrypt from "bcryptjs";
-import {IsEmail, IsNotEmpty, Length} from 'class-validator'
+import { IsEmail, IsNotEmpty, Length } from 'class-validator'
+import { BookedByUser } from "./bookedbyUser";
 
 export enum Role {
   USER = "user",
@@ -10,11 +11,11 @@ export enum Role {
 
 @Entity()
 export class User extends BaseEntity {
-  @Length(3,50, {message:"Full Name has not more than 50 characters"})
-  @IsNotEmpty({message:"Full Name is required"})
+  @Length(3, 50, { message: "Full Name has not more than 50 characters" })
+  @IsNotEmpty({ message: "Full Name is required" })
   @Column()
   fullName: string;
- 
+
   @IsNotEmpty({ message: 'Email is required' })
   @IsEmail(undefined, { message: 'Invalid email format' })
   @Column({ unique: true })
@@ -41,6 +42,9 @@ export class User extends BaseEntity {
     default: Role.USER,
   })
   role: Role;
+
+  @OneToMany(() => BookedByUser, bookedByUser => bookedByUser.user)
+  bookings?: BookedByUser[];
 
   @BeforeInsert()
   hashPassword() {
