@@ -1,8 +1,8 @@
 import { Entity, Column, BeforeInsert, OneToMany } from "typeorm";
-import { BaseEntity } from "./base.entity";
+import { BaseEntity } from "./base";
 import bcrypt from "bcryptjs";
 import { IsEmail, IsNotEmpty, Length } from 'class-validator'
-import { BookedByUser } from "./bookedbyUser";
+import { BookedByUser } from "./bookedbyUser.entity";
 
 export enum Role {
   USER = "user",
