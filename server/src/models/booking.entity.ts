@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany, OneToOne } from "typeorm";
-import { BaseEntity } from "./base";
+import { BaseEntity } from "./base.entity";
 import { IsNotEmpty } from "class-validator";
 import { BookedByUser } from "./bookedbyUser.entity";
 

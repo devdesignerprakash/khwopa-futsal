@@ -12,13 +12,12 @@ const AppDataSource = new DataSource({
     database: process.env.DB_NAME,
     entities: [path.join(__dirname, "../models/*.entity.ts")],
     synchronize: true,
-    logging: true,
+    // dropSchema:true
 
 })
 export const DbConnection = async () => {
     try {
         await AppDataSource.initialize()
-        console.log("Data Source has been initialized!")
     } catch (error) {
         console.error("Error during Data Source initialization", error)
     }

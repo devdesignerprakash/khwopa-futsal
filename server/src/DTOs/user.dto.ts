@@ -1,7 +1,4 @@
-export enum Role{
-    USER="user",
-    Admin="admin"
-}
+import { Role } from "../models/user.entity";
 
 export interface UserDto{
     fullName:string,
@@ -9,5 +6,5 @@ export interface UserDto{
     phoneNumber:string,
     address:string,
     password:string,
-    role:Role
+    role?:Role
 }

@@ -1,5 +1,5 @@
 import { Entity, Column, BeforeInsert, OneToMany } from "typeorm";
-import { BaseEntity } from "./base";
+import { BaseEntity } from "./base.entity";
 import bcrypt from "bcryptjs";
 import { IsEmail, IsNotEmpty, Length } from 'class-validator'
 import { BookedByUser } from "./bookedbyUser.entity";
@@ -10,7 +10,7 @@ export enum Role {
 }
 
 @Entity()
-export class User extends BaseEntity {
+ class User extends BaseEntity {
   @Length(3, 50, { message: "Full Name has not more than 50 characters" })
   @IsNotEmpty({ message: "Full Name is required" })
   @Column()
@@ -29,7 +29,7 @@ export class User extends BaseEntity {
   @IsNotEmpty({ message: 'Phone number is required' })
   @Length(10, 10, { message: 'Phone number must be 10 digits' })
   @Column()
-  phone: string;
+  phoneNumber: string;
 
   @IsNotEmpty({ message: 'Password is required' })
   @Length(8, 20, { message: 'Password must be between 8 and 20 characters' })
@@ -52,3 +52,6 @@ export class User extends BaseEntity {
     this.password = bcrypt.hashSync(this.password, salt);
   }
 }
+
+
+export default User;
