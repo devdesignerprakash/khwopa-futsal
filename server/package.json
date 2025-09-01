@@ -4,8 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
-    "build": "tsc",
+    "tsoa": "tsoa spec",
+    "dev": "pnpm tsoa && ts-node-dev --respawn --transpile-only src/index.ts",
+    "build": "tsoa spec && tsc && copyfiles -u 1 src/swagger/*.json build/swagger",
+    "start": "node build/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -16,7 +18,9 @@
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/node": "^24.3.0",
+    "@types/swagger-ui-express": "^4.1.8",
     "class-validator": "^0.14.2",
+    "copyfiles": "^2.4.1",
     "i": "^0.3.7",
     "npm": "^11.5.2",
     "pg": "^8.16.3",
@@ -24,11 +28,14 @@
     "typescript": "^5.9.2"
   },
   "dependencies": {
+    "@tsoa/runtime": "^6.6.0",
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
+    "swagger-ui-express": "^5.0.1",
+    "tsoa": "^6.6.0",
     "typeorm": "^0.3.26",
     "uuid": "^11.1.0"
   }

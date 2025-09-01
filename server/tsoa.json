@@ -1,0 +1,17 @@
+{
+  "entryFile": "./src/index.ts",
+  "noImplicitAdditionalProperties": "throw-on-extras",
+"controllerPathGlobs": ["./src/controllers/*Controller.ts"],
+  "spec": {
+    "outputDirectory": "src/swagger",
+    "specFile": "swagger.json",
+    "specVersion": 3,
+     "host": "localhost:8000",       
+    "schemes": ["http"],   
+     "basePath": "/api"  
+  },
+  "routes": {
+   
+    "routesDir": "build/routes"
+  }
+}

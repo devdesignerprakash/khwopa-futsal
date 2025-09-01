@@ -1,7 +1,7 @@
 import { Entity, ManyToOne, JoinColumn, OneToOne } from "typeorm";
 import { BaseEntity } from "./base.entity";
 import { Booking } from "./booking.entity";
-import { User } from "./user.entity";
+import  User  from "./user.entity";
 
 @Entity()
 export class BookedByUser extends BaseEntity {
