@@ -7,15 +7,114 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
-			"UserResponseDto": {
+			"Role": {
+				"enum": [
+					"user",
+					"admin"
+				],
+				"type": "string"
+			},
+			"Status": {
+				"enum": [
+					"not booked",
+					"cancelled",
+					"completed",
+					"pending",
+					"approved"
+				],
+				"type": "string"
+			},
+			"BookedByUser": {
 				"properties": {
 					"id": {
 						"type": "string"
 					},
-					"fullName": {
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"booking": {
+						"$ref": "#/components/schemas/Booking"
+					},
+					"user": {
+						"$ref": "#/components/schemas/User"
+					}
+				},
+				"required": [
+					"id",
+					"createdAt",
+					"updatedAt",
+					"booking",
+					"user"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"Booking": {
+				"properties": {
+					"id": {
 						"type": "string"
 					},
-					"phoneNumber": {
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"start_time": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"end_time": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"date": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"status": {
+						"$ref": "#/components/schemas/Status"
+					},
+					"bookedBy": {
+						"items": {
+							"$ref": "#/components/schemas/BookedByUser"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"id",
+					"createdAt",
+					"updatedAt",
+					"start_time",
+					"end_time",
+					"date",
+					"status"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"User": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"fullName": {
 						"type": "string"
 					},
 					"email": {
@@ -24,44 +123,37 @@
 					"address": {
 						"type": "string"
 					},
-					"role": {
+					"phoneNumber": {
 						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					},
+					"role": {
+						"$ref": "#/components/schemas/Role"
+					},
+					"bookings": {
+						"items": {
+							"$ref": "#/components/schemas/BookedByUser"
+						},
+						"type": "array"
 					}
 				},
 				"required": [
 					"id",
+					"createdAt",
+					"updatedAt",
 					"fullName",
-					"phoneNumber",
 					"email",
 					"address",
+					"phoneNumber",
+					"password",
 					"role"
 				],
 				"type": "object",
-				"additionalProperties": false
+				"additionalProperties": true
 			},
-			"RegisterResponse": {
-				"properties": {
-					"message": {
-						"type": "string"
-					},
-					"data": {
-						"$ref": "#/components/schemas/UserResponseDto"
-					}
-				},
-				"required": [
-					"message"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"Role": {
-				"enum": [
-					"user",
-					"admin"
-				],
-				"type": "string"
-			},
-			"UserDto": {
+			"RegisterDto": {
 				"properties": {
 					"fullName": {
 						"type": "string"
@@ -90,7 +182,25 @@
 					"password"
 				],
 				"type": "object",
-				"additionalProperties": false
+				"additionalProperties": true
+			},
+			"LoginDto": {
+				"properties": {
+					"phoneNumber": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"password"
+				],
+				"type": "object",
+				"additionalProperties": true
 			}
 		},
 		"securitySchemes": {}
@@ -113,7 +223,79 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/RegisterResponse"
+									"anyOf": [
+										{
+											"properties": {
+												"data": {},
+												"message": {
+													"type": "string"
+												}
+											},
+											"required": [
+												"message"
+											],
+											"type": "object"
+										},
+										{
+											"properties": {
+												"data": {
+													"properties": {
+														"updatedAt": {
+															"type": "string",
+															"format": "date-time"
+														},
+														"createdAt": {
+															"type": "string",
+															"format": "date-time"
+														},
+														"id": {
+															"type": "string"
+														},
+														"bookings": {
+															"items": {
+																"$ref": "#/components/schemas/BookedByUser"
+															},
+															"type": "array"
+														},
+														"role": {
+															"$ref": "#/components/schemas/Role"
+														},
+														"phoneNumber": {
+															"type": "string"
+														},
+														"address": {
+															"type": "string"
+														},
+														"email": {
+															"type": "string"
+														},
+														"fullName": {
+															"type": "string"
+														}
+													},
+													"required": [
+														"updatedAt",
+														"createdAt",
+														"id",
+														"role",
+														"phoneNumber",
+														"address",
+														"email",
+														"fullName"
+													],
+													"type": "object"
+												},
+												"message": {
+													"type": "string"
+												}
+											},
+											"required": [
+												"data",
+												"message"
+											],
+											"type": "object"
+										}
+									]
 								}
 							}
 						}
@@ -131,8 +313,48 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/UserDto",
+								"$ref": "#/components/schemas/RegisterDto",
 								"description": "User registration data"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/login": {
+			"post": {
+				"operationId": "Login",
+				"responses": {
+					"200": {
+						"description": "User logged in Successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Auth"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/LoginDto"
 							}
 						}
 					}
@@ -142,7 +364,7 @@
 	},
 	"servers": [
 		{
-			"url": "http://localhost:8000/api"
+			"url": "http://localhost:8000/"
 		}
 	]
 }

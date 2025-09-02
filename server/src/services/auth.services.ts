@@ -1,8 +1,8 @@
-import { UserDto } from "../DTOs/user.dto";
+import { RegisterDto} from "../DTOs/auth.dto";
 import  User  from "../models/user.entity";
 
 class AuthServices{
-   static async  registerUser(data:UserDto){
+   public static async  registerUser(data:RegisterDto){
         const newUser= User.create({
             fullName:data.fullName,
             phoneNumber:data.phoneNumber,
@@ -12,9 +12,7 @@ class AuthServices{
             role:data.role
         })
         await newUser.save()
-    }
-    async loginUser(data:UserDto){
-
+        return newUser;
     }
     
 }

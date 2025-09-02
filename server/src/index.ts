@@ -3,17 +3,21 @@ import  cors from 'cors';
 import { DbConnection } from './config/databaseConfig';
 import swaggerUi from "swagger-ui-express";
 import swaggerDocument from './swagger/swagger.json'
+import {RegisterRoutes} from '../build/routes/routes'
+import cookieParser from 'cookie-parser'
+
 // import swaggerDocument from ""
 
 const app= express()
 
-
 // json data
 app.use(express.json())
+app.use(cookieParser())
 app.use(express.urlencoded({extended:true}))
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-
 app.use(cors())
+RegisterRoutes(app)
+
 //running server
 app.listen(8000,()=>{
     DbConnection().then(()=>{

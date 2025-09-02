@@ -12,6 +12,8 @@ dist
 dist-ssr
 *.local
 pnpm-lock.yaml
+build
+swagger
 
 # Editor directories and files
 .vscode/*
