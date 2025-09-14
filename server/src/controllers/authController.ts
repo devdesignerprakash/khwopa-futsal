@@ -1,9 +1,10 @@
 import { LoginDto, RegisterDto } from "../DTOs/auth.dto";
 import User from "../models/user.entity";
 import AuthServices from "../services/auth.services";
-import { Body, Controller, Post, Res, Route, SuccessResponse, Tags } from "tsoa";
+import { Body, Controller, Post, Res, Route, SuccessResponse, Tags, TsoaResponse } from "tsoa";
 import bcrypt from 'bcryptjs'
 import { generateToken } from "../utils/token";
+import { Response } from "express";
 
 @Route("auth")
 @Tags("Auth")
@@ -73,6 +74,18 @@ export class AuthController extends Controller {
         message: `Registration failed: ${error instanceof Error ? error.message : "Unknown error"}`,
       };
     }
+  }
+@Post("/logout")
+@SuccessResponse("200", "User logged out successfully")
+  public logout(): { message: string } {
+    // Set the Set-Cookie header to clear the cookie
+    this.setHeader(
+      "Set-Cookie",
+      "token=; HttpOnly; Path=/; Max-Age=0; SameSite=Lax"
+    );
+
+    this.setStatus(200);
+    return { message: "User logged out successfully" };
   }
 }
 
