@@ -6,7 +6,16 @@
     "specFile": "swagger.json",
     "specVersion": 3,
     "host": "localhost:8000",
-    "schemes": ["http"]
+    "schemes": ["http"],
+    "components": {
+      "securitySchemes": {
+        "cookieAuth": {
+           "type": "apiKey",
+          "in": "cookie",
+          "name": "token"
+        }
+      }
+    }
    
   },
   "routes": {
