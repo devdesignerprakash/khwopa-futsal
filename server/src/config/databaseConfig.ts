@@ -18,7 +18,7 @@ const AppDataSource = new DataSource({
 export const DbConnection = async () => {
     try {
         await AppDataSource.initialize()
-    } catch (error) {
+    } catch (error) { 
         console.error("Error during Data Source initialization", error)
     }
 

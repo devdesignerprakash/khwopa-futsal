@@ -1,16 +1,10 @@
-import { Column, Entity, OneToMany, OneToOne } from "typeorm";
+import { Column, Entity, JoinColumn, OneToMany, OneToOne } from "typeorm";
 import { BaseEntity } from "./base.entity";
 import { IsNotEmpty } from "class-validator";
 import { BookedByUser } from "./bookedbyUser.entity";
+import { Status } from "../utils/status.enum";
 
 
-export enum Status {
-    NOT_BOOKED = 'not booked',
-    CANCELLED = 'cancelled',
-    COMPLETED = 'completed',
-    PENDING = 'pending',
-    APPROVED = 'approved',
-}
 
 
 @Entity()

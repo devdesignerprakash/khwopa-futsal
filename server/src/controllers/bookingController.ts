@@ -1,11 +1,8 @@
 import { verifyAdmin, verifyToken } from "../utils/token";
-import { bookingDTO } from "../DTOs/booking.dto";
+import { BookingDTO, UpdateBookingDTO } from "../DTOs/booking.dto";
 import { Booking } from "../models/booking.entity";
 import { BookingServices } from '../services/booking.services';
 import { Body, Controller, Get, Middlewares, Path, Post, Route, SuccessResponse, Tags } from "tsoa";
-
-
-
 
 @Route("booking")
 @Tags("Booking")
@@ -18,7 +15,7 @@ export class BookingController extends Controller {
     @Post("/create")
     @SuccessResponse("201", "Booking created successfully")
     @Middlewares(verifyToken,verifyAdmin)
-    public async createBooking(@Body() body: bookingDTO) {
+    public async createBooking(@Body() body: BookingDTO) {
 
         try {
             const startTime= new Date(body.start_time)
@@ -89,6 +86,51 @@ export class BookingController extends Controller {
             this.setStatus(500)
             return { message: "internal server error" }
         }
+    }
+    /**
+     * update booking by id
+     * @param id
+     * @param body
+     * @returns updated booking
+     */
+    @Post("/update-booking/:id")
+    @SuccessResponse("200", "Booking updated successfully")
+    @Middlewares(verifyToken, verifyAdmin)
+    public async updateBooking(@Path() id: string, @Body() body: UpdateBookingDTO) {
+        try{
+        const booking=await Booking.findOneBy({id:id})
+        if(!booking){
+            return {message:"booking not found"}
+        }
+        //     let startTime= new Date(body?.start_time)
+        //     let endTime= new Date(body?.end_time)
+        //     let date= new Date(body?.date)
+        //    if(startTime.getTime()===endTime.getTime() ){
+        //     this.setStatus(400)
+        //     return {message:"start time and end time cannot be same"}
+        //    }
+        //    if(startTime.getTime()>endTime.getTime()){
+        //     this.setStatus(400)
+        //     return {message:"start time cannot be greater than end time"}
+        //    }
+        //     const existBooking = await Booking.createQueryBuilder("booking").where({ date: date }).andWhere({ start_time: startTime}).andWhere({ end_time: endTime }).getOne()
+        //     if (existBooking) {
+        //         this.setStatus(400)
+        //         return { message: "booking already exist" }
+        //     }
+            const updateBooking= BookingServices.updateBooking(id,body)
+            if(!updateBooking){
+                this.setStatus(404)
+                return { message: "booking not found" }
+            }
+            this.setStatus(200)
+            return { message: "booking updated successfully", data: updateBooking }
+
+        }catch(error){
+            console.log("update booking error", error)
+            this.setStatus(500)
+            return { message: "internal server error" }
+        }  
     }
     
 }
