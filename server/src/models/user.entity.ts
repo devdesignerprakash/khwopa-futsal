@@ -3,6 +3,7 @@ import { BaseEntity } from "./base.entity";
 import bcrypt from "bcryptjs";
 import { IsEmail, IsNotEmpty, Length } from 'class-validator'
 import { BookedByUser } from "./bookedbyUser.entity";
+import { Like } from "./like.entity";
 
 export enum Role {
   USER = "user",
@@ -45,6 +46,9 @@ export enum Role {
 
   @OneToMany(() => BookedByUser, bookedByUser => bookedByUser.user)
   bookings?: BookedByUser[];
+
+  @OneToMany(() => Like, like => like.user)
+  likes?: Like[]
 
   @BeforeInsert()
   hashPassword() {

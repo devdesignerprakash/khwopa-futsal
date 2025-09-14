@@ -62,6 +62,40 @@ const models: TsoaRoute.Models = {
             "password": {"dataType":"string","required":true},
             "role": {"ref":"Role","required":true},
             "bookings": {"dataType":"array","array":{"dataType":"refObject","ref":"BookedByUser"}},
+            "likes": {"dataType":"array","array":{"dataType":"refObject","ref":"Like"}},
+        },
+        "additionalProperties": true,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "EventStatus": {
+        "dataType": "refEnum",
+        "enums": ["upcoming","completed"],
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Like": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"string","required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+            "updatedAt": {"dataType":"datetime","required":true},
+            "user": {"ref":"User","required":true},
+            "events": {"ref":"Events","required":true},
+        },
+        "additionalProperties": true,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Events": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"string","required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+            "updatedAt": {"dataType":"datetime","required":true},
+            "title": {"dataType":"string","required":true},
+            "description": {"dataType":"string","required":true},
+            "images": {"dataType":"array","array":{"dataType":"string"}},
+            "videos": {"dataType":"array","array":{"dataType":"string"}},
+            "status": {"ref":"EventStatus","required":true},
+            "likes": {"dataType":"array","array":{"dataType":"refObject","ref":"Like"}},
         },
         "additionalProperties": true,
     },

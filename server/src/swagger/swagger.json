@@ -137,6 +137,12 @@
 							"$ref": "#/components/schemas/BookedByUser"
 						},
 						"type": "array"
+					},
+					"likes": {
+						"items": {
+							"$ref": "#/components/schemas/Like"
+						},
+						"type": "array"
 					}
 				},
 				"required": [
@@ -149,6 +155,95 @@
 					"phoneNumber",
 					"password",
 					"role"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"EventStatus": {
+				"enum": [
+					"upcoming",
+					"completed"
+				],
+				"type": "string"
+			},
+			"Like": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"user": {
+						"$ref": "#/components/schemas/User"
+					},
+					"events": {
+						"$ref": "#/components/schemas/Events"
+					}
+				},
+				"required": [
+					"id",
+					"createdAt",
+					"updatedAt",
+					"user",
+					"events"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"Events": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"title": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"images": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"videos": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"status": {
+						"$ref": "#/components/schemas/EventStatus"
+					},
+					"likes": {
+						"items": {
+							"$ref": "#/components/schemas/Like"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"id",
+					"createdAt",
+					"updatedAt",
+					"title",
+					"description",
+					"status"
 				],
 				"type": "object",
 				"additionalProperties": true
@@ -250,6 +345,12 @@
 														},
 														"id": {
 															"type": "string"
+														},
+														"likes": {
+															"items": {
+																"$ref": "#/components/schemas/Like"
+															},
+															"type": "array"
 														},
 														"bookings": {
 															"items": {
