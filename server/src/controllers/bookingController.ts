@@ -24,7 +24,14 @@ export class BookingController extends Controller {
             const startTime= new Date(body.start_time)
             const endTime= new Date(body.end_time)
             const date= new Date(body.date)
-            console.log(body.start_time)
+           if(startTime.getTime()===endTime.getTime() ){
+            this.setStatus(400)
+            return {message:"start time and end time cannot be same"}
+           }
+           if(startTime.getTime()>endTime.getTime()){
+            this.setStatus(400)
+            return {message:"start time cannot be greater than end time"}
+           }
             const existBooking = await Booking.createQueryBuilder("booking").where({ date: date }).andWhere({ start_time: startTime}).andWhere({ end_time: endTime }).getOne()
             if (existBooking) {
                 this.setStatus(400)
