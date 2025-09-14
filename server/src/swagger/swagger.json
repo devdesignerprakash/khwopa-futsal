@@ -7,13 +7,6 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
-			"Role": {
-				"enum": [
-					"user",
-					"admin"
-				],
-				"type": "string"
-			},
 			"Status": {
 				"enum": [
 					"not booked",
@@ -23,36 +16,6 @@
 					"approved"
 				],
 				"type": "string"
-			},
-			"BookedByUser": {
-				"properties": {
-					"id": {
-						"type": "string"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"updatedAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"booking": {
-						"$ref": "#/components/schemas/Booking"
-					},
-					"user": {
-						"$ref": "#/components/schemas/User"
-					}
-				},
-				"required": [
-					"id",
-					"createdAt",
-					"updatedAt",
-					"booking",
-					"user"
-				],
-				"type": "object",
-				"additionalProperties": true
 			},
 			"Booking": {
 				"properties": {
@@ -97,6 +60,43 @@
 					"end_time",
 					"date",
 					"status"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"Role": {
+				"enum": [
+					"user",
+					"admin"
+				],
+				"type": "string"
+			},
+			"BookedByUser": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"booking": {
+						"$ref": "#/components/schemas/Booking"
+					},
+					"user": {
+						"$ref": "#/components/schemas/User"
+					}
+				},
+				"required": [
+					"id",
+					"createdAt",
+					"updatedAt",
+					"booking",
+					"user"
 				],
 				"type": "object",
 				"additionalProperties": true
@@ -248,6 +248,26 @@
 				"type": "object",
 				"additionalProperties": true
 			},
+			"bookingDTO": {
+				"properties": {
+					"start_time": {
+						"type": "string"
+					},
+					"end_time": {
+						"type": "string"
+					},
+					"date": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"start_time",
+					"end_time",
+					"date"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
 			"RegisterDto": {
 				"properties": {
 					"fullName": {
@@ -309,6 +329,69 @@
 		"contact": {}
 	},
 	"paths": {
+		"/booking/create": {
+			"post": {
+				"operationId": "CreateBooking",
+				"responses": {
+					"201": {
+						"description": "Booking created successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"anyOf": [
+										{
+											"properties": {
+												"data": {},
+												"message": {
+													"type": "string"
+												}
+											},
+											"required": [
+												"message"
+											],
+											"type": "object"
+										},
+										{
+											"properties": {
+												"data": {
+													"$ref": "#/components/schemas/Booking"
+												},
+												"message": {
+													"type": "string"
+												}
+											},
+											"required": [
+												"data",
+												"message"
+											],
+											"type": "object"
+										}
+									]
+								}
+							}
+						}
+					}
+				},
+				"description": "create a new booking",
+				"tags": [
+					"Booking"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"description": "booking data",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/bookingDTO",
+								"description": "booking data"
+							}
+						}
+					}
+				}
+			}
+		},
 		"/auth/register": {
 			"post": {
 				"operationId": "RegisterUser",

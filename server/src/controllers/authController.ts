@@ -4,7 +4,6 @@ import AuthServices from "../services/auth.services";
 import { Body, Controller, Post, Res, Route, SuccessResponse, Tags, TsoaResponse } from "tsoa";
 import bcrypt from 'bcryptjs'
 import { generateToken } from "../utils/token";
-import { Response } from "express";
 
 @Route("auth")
 @Tags("Auth")
