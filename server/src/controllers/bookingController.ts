@@ -2,7 +2,7 @@ import { verifyAdmin, verifyToken } from "../utils/token";
 import { bookingDTO } from "../DTOs/booking.dto";
 import { Booking } from "../models/booking.entity";
 import { BookingServices } from '../services/booking.services';
-import { Body, Controller, Middlewares, Post, Route, SuccessResponse, Tags } from "tsoa";
+import { Body, Controller, Get, Middlewares, Path, Post, Route, SuccessResponse, Tags } from "tsoa";
 
 
 
@@ -49,5 +49,46 @@ export class BookingController extends Controller {
         }
 
     }
-
+       /**
+ * get all bookings
+ * @returns all bookings
+ */
+    @Get("/all-bookings")
+    @SuccessResponse("200", "Booking fetched successfully")
+    @Middlewares(verifyToken)
+    public async getAllBooking() {
+        try {
+            const bookings = await Booking.find()
+            this.setStatus(200)
+            return { message: "booking fetched successfully", data: bookings }
+        } catch (error) {
+            console.log("booking controller error", error)
+            this.setStatus(500)
+            return { message: "internal server error" }
+        }
+    }
+    /***
+     * get bookings by id
+     * @params id
+     * @returns booking by id
+     */
+    @Get("/get-booking/:id")
+    @SuccessResponse("200", "Booking fetched successfully")
+    @Middlewares(verifyToken)
+    public async getBookingById(@Path() id: string) {
+        try {
+            const booking = await Booking.findOneBy({ id: id })
+            if (!booking) {
+                this.setStatus(404)
+                return { message: "booking not found" }
+            }
+            this.setStatus(200)
+            return { message: "booking fetched successfully", data: booking }
+        } catch (error) {
+            console.log("booking controller error", error)
+            this.setStatus(500)
+            return { message: "internal server error" }
+        }
+    }
+    
 }

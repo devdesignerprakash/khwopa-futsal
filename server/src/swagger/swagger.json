@@ -392,6 +392,120 @@
 				}
 			}
 		},
+		"/booking/all-bookings": {
+			"get": {
+				"operationId": "GetAllBooking",
+				"responses": {
+					"200": {
+						"description": "Booking fetched successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"anyOf": [
+										{
+											"properties": {
+												"data": {
+													"items": {
+														"$ref": "#/components/schemas/Booking"
+													},
+													"type": "array"
+												},
+												"message": {
+													"type": "string"
+												}
+											},
+											"required": [
+												"data",
+												"message"
+											],
+											"type": "object"
+										},
+										{
+											"properties": {
+												"data": {},
+												"message": {
+													"type": "string"
+												}
+											},
+											"required": [
+												"message"
+											],
+											"type": "object"
+										}
+									]
+								}
+							}
+						}
+					}
+				},
+				"description": "get all bookings",
+				"tags": [
+					"Booking"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/booking/get-booking/{id}": {
+			"get": {
+				"operationId": "GetBookingById",
+				"responses": {
+					"200": {
+						"description": "Booking fetched successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"anyOf": [
+										{
+											"properties": {
+												"data": {},
+												"message": {
+													"type": "string"
+												}
+											},
+											"required": [
+												"message"
+											],
+											"type": "object"
+										},
+										{
+											"properties": {
+												"data": {
+													"$ref": "#/components/schemas/Booking"
+												},
+												"message": {
+													"type": "string"
+												}
+											},
+											"required": [
+												"data",
+												"message"
+											],
+											"type": "object"
+										}
+									]
+								}
+							}
+						}
+					}
+				},
+				"description": "*\r\nget bookings by id",
+				"tags": [
+					"Booking"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
 		"/auth/register": {
 			"post": {
 				"operationId": "RegisterUser",
