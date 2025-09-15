@@ -2,7 +2,7 @@ import { verifyAdmin, verifyToken } from "../utils/token";
 import { BookingDTO, UpdateBookingDTO } from "../DTOs/booking.dto";
 import { Booking } from "../models/booking.entity";
 import { BookingServices } from '../services/booking.services';
-import { Body, Controller, Get, Middlewares, Path, Post, Put, Route, SuccessResponse, Tags } from "tsoa";
+import { Body, Controller, Delete, Get, Middlewares, Path, Post, Put, Route, SuccessResponse, Tags } from "tsoa";
 
 @Route("booking")
 @Tags("Booking")
@@ -138,5 +138,23 @@ export class BookingController extends Controller {
             return { message: "internal server error" }
         }
     }
-
+    @Delete("/delete-booking/:id")
+    @SuccessResponse("200", "Booking deleted successfully")
+    @Middlewares(verifyToken, verifyAdmin)
+    public async deleteBooking(@Path() id: string) {
+        try {
+            const booking = await Booking.findOneBy({ id: id })
+            if (!booking) {
+                this.setStatus(404)
+                return { message: "booking not found" }
+            }
+           await BookingServices.deleteBooking(id)
+            this.setStatus(200)
+            return { message: "booking deleted successfully" }
+        } catch (error) {
+            console.log("delete booking error", error)
+            this.setStatus(500)
+            return { message: "internal server error" }
+        }
+    }
 }

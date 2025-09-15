@@ -20,7 +20,14 @@ export class BookingServices{
         await booking.save()
         return booking
     }
-     
+     public static async deleteBooking(id:string){
+        const booking= await Booking.findOneBy({id:id})
+        if(!booking){
+            return null
+        }
+        await booking.remove()
+        return booking
+    }
 
     
 
