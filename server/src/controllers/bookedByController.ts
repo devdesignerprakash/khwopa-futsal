@@ -1,6 +1,6 @@
 import { BookedByServices } from "../services/bookedBy.services";
 import { BookedUserDTO, UpdateBookedStatusDTO, UpdateBookingDTO } from "../DTOs/booking.dto";
-import { Body, Controller, Get, Middlewares, Path, Post, Put, Route, SuccessResponse, Tags } from "tsoa";
+import { Body, Controller, Delete, Get, Middlewares, Path, Post, Put, Route, SuccessResponse, Tags } from "tsoa";
 import { Booking } from "../models/booking.entity";
 import { BookingStatus } from "../utils/status.enum";
 import { verifyAdmin, verifyToken } from "../utils/token";
@@ -95,6 +95,32 @@ public async updateBookingStatus(@Path()id:string,@Body()body:UpdateBookedStatus
 
     }catch(error){
         console.log("update booking status controller error", error)
+        this.setStatus(500)
+        return {message:"Internal server error"}
+
+    }
+}
+@Delete("/delete/:id")
+@Middlewares(verifyToken, verifyAdmin)
+public async deleteBooking(@Path()id:string){
+    try{
+        const booked= await BookedByUser.findOne({where:{id:id}, relations:{booking:true}, select:{booking:{id:true}}})
+        if(!booked){
+            this.setStatus(404)
+            return {message:"Booked doesn't exist"}
+        }
+        const booking= await Booking.findOne({where:{id:booked.booking.id}})
+        if(!booking){
+            this.setStatus(404)
+            return {message:"Booking doesn't exist"}
+        }
+        const deletebooked= await BookedByUser.delete(id)
+        await Booking.update(booking.id, {bookingStatus:BookingStatus.NOT_BOOKED})
+        this.setStatus(200)
+        return ({message:"booking deleted successfully"})
+
+    }catch(error){
+        console.log("delete booking controller error", error)
         this.setStatus(500)
         return {message:"Internal server error"}
 
