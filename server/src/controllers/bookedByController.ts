@@ -1,10 +1,12 @@
 import { BookedByServices } from "../services/bookedBy.services";
-import { BookedUserDTO } from "../DTOs/booking.dto";
-import { Body, Controller, Get, Middlewares, Path, Post, Route, SuccessResponse, Tags } from "tsoa";
+import { BookedUserDTO, UpdateBookedStatusDTO, UpdateBookingDTO } from "../DTOs/booking.dto";
+import { Body, Controller, Get, Middlewares, Path, Post, Put, Route, SuccessResponse, Tags } from "tsoa";
 import { Booking } from "../models/booking.entity";
 import { BookingStatus } from "../utils/status.enum";
-import { verifyToken } from "../utils/token";
+import { verifyAdmin, verifyToken } from "../utils/token";
 import { BookedByUser } from "../models/bookedbyUser.entity";
+
+
 
 @Route('bookedBy')
 @Tags("BookedBy")
@@ -71,4 +73,32 @@ public async getAllBooked(){
     }
 
 }
+@Put("/update-status/{id}")
+@SuccessResponse("200", "status updated")
+@Middlewares(verifyToken,verifyAdmin)
+public async updateBookingStatus(@Path()id:string,@Body()body:UpdateBookedStatusDTO){
+    try{
+        const booked= await BookedByUser.findOne({where:{id:id},relations:{booking:true},select:{booking:{id:true}}})
+        console.log("booked",booked, "status",body.status)
+        if(!booked){
+            this.setStatus(404)
+            return {message:"Booked doesn't exist"}
+        }
+        const booking= await Booking.findOne({where:{id:booked.booking.id}})
+        if(!booking){
+            this.setStatus(404)
+            return {message:"Booking doesn't exist"}
+        }
+        const updatedBooking= await BookedByServices.updateBookedStatus(booked.booking.id,body.status)
+        this.setStatus(200)
+        return ({message:"booking status updated successfully"})
+
+    }catch(error){
+        console.log("update booking status controller error", error)
+        this.setStatus(500)
+        return {message:"Internal server error"}
+
+    }
+}
+
 }

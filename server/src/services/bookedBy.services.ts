@@ -15,4 +15,8 @@ export class BookedByServices {
        await Booking.update(data.bookingId, { bookingStatus: BookingStatus.PENDING });
         return bookedUser
     }
+    public static async updateBookedStatus(id:string,status:BookingStatus){
+        const updatedBooking= await Booking.update(id, { bookingStatus:status });
+        return updatedBooking
+    }
 }
