@@ -1,15 +1,40 @@
-import { useFetch } from "../hooks/useFetch"
+import type { BookingDTO } from "../DTOs/bookingDTO";
+import { useFetch } from "../hooks/useFetch";
+import { useEffect, useState } from "react";
+
 
 function Bookings() {
-  const response= useFetch("/booking/all-bookings")
-  console.log(response)
+  const [allBookings,setAllBookings]=useState<BookingDTO[]>([]);
+  const {data,loading,error}=useFetch<BookingDTO[]>("/booking/all-bookings");
+  useEffect(()=>{
+    if(data){
+      // @ts-ignore
+      setAllBookings(data.data);
+    }
+  },[data])
 
+
+  
   return (
+
     <div className="flex flex-col w-full max-w-7xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
       {/* Header */}
       <div className="px-6 py-4 border-b bg-gray-50">
         <h1 className="font-bold text-2xl text-gray-800">Today's Bookings</h1>
       </div>
+
+{
+  allBookings.length!==0 && allBookings.map((booking)=>(
+    <div key={booking.id} className="p-4 border-b">
+      <p className="text-gray-700"><span className="font-semibold">Booking ID:</span> {booking.id}</p>  
+      <p className="text-gray-700"><span className="font-semibold">Status:</span> {booking.bookingStatus}</p>
+      <p className="text-gray-700"><span className="font-semibold">Date:</span> {new Date(booking.date).toLocaleDateString()}</p>
+      <p className="text-gray-700"><span className="font-semibold">Start Time:</span> {new Date(booking.start_time).toLocaleTimeString()}</p>
+      <p className="text-gray-700"><span className="font-semibold">End Time:</span> {new Date(booking.end_time).toLocaleTimeString()}</p>
+    </div>
+  ))
+}
+      
 
       {/* Table */}
       <div className="overflow-x-auto">
