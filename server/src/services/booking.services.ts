@@ -11,13 +11,17 @@ export class BookingServices{
         await newBooking.save()
         return newBooking;
     }
-    public static async updateBooking(id:string, data:UpdateBookingDTO){
-        
-        // data?.start_time=new Date(data.start_time)
-        // data?.end_time=new Date(data.end_time)
-        // data.date?=new Date(data.date)
-        const updateBooking= await Booking.update(id,data)
-        return updateBooking
+    public static async updateBooking(id:string, data:Partial<Booking>){
+        const booking= await Booking.findOneBy({id:id})
+        if(!booking){
+            return null
+        }
+        Object.assign(booking,data)
+        await booking.save()
+        return booking
     }
+     
+
+    
 
 }

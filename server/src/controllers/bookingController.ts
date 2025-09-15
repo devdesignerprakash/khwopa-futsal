@@ -2,7 +2,7 @@ import { verifyAdmin, verifyToken } from "../utils/token";
 import { BookingDTO, UpdateBookingDTO } from "../DTOs/booking.dto";
 import { Booking } from "../models/booking.entity";
 import { BookingServices } from '../services/booking.services';
-import { Body, Controller, Get, Middlewares, Path, Post, Route, SuccessResponse, Tags } from "tsoa";
+import { Body, Controller, Get, Middlewares, Path, Post, Put, Route, SuccessResponse, Tags } from "tsoa";
 
 @Route("booking")
 @Tags("Booking")
@@ -14,30 +14,30 @@ export class BookingController extends Controller {
  */
     @Post("/create")
     @SuccessResponse("201", "Booking created successfully")
-    @Middlewares(verifyToken,verifyAdmin)
+    @Middlewares(verifyToken, verifyAdmin)
     public async createBooking(@Body() body: BookingDTO) {
 
         try {
-            const startTime= new Date(body.start_time)
-            const endTime= new Date(body.end_time)
-            const date= new Date(body.date)
-           if(startTime.getTime()===endTime.getTime() ){
-            this.setStatus(400)
-            return {message:"start time and end time cannot be same"}
-           }
-           if(startTime.getTime()>endTime.getTime()){
-            this.setStatus(400)
-            return {message:"start time cannot be greater than end time"}
-           }
-            const existBooking = await Booking.createQueryBuilder("booking").where({ date: date }).andWhere({ start_time: startTime}).andWhere({ end_time: endTime }).getOne()
+            const startTime = new Date(body.start_time)
+            const endTime = new Date(body.end_time)
+            const date = new Date(body.date)
+            if (startTime.getTime() === endTime.getTime()) {
+                this.setStatus(400)
+                return { message: "start time and end time cannot be same" }
+            }
+            if (startTime.getTime() > endTime.getTime()) {
+                this.setStatus(400)
+                return { message: "start time cannot be greater than end time" }
+            }
+            const existBooking = await Booking.createQueryBuilder("booking").where({ date: date }).andWhere({ start_time: startTime }).andWhere({ end_time: endTime }).getOne()
             if (existBooking) {
                 this.setStatus(400)
                 return { message: "booking already exist" }
             }
-             const booking= await BookingServices.createBooking(body)
+            const booking = await BookingServices.createBooking(body)
 
             this.setStatus(201)
-            return { message: "booking created successfully", data:booking}
+            return { message: "booking created successfully", data: booking }
 
         } catch (error) {
             console.log("booking controller error", error)
@@ -46,10 +46,10 @@ export class BookingController extends Controller {
         }
 
     }
-       /**
- * get all bookings
- * @returns all bookings
- */
+    /**
+* get all bookings
+* @returns all bookings
+*/
     @Get("/all-bookings")
     @SuccessResponse("200", "Booking fetched successfully")
     @Middlewares(verifyToken)
@@ -93,44 +93,50 @@ export class BookingController extends Controller {
      * @param body
      * @returns updated booking
      */
-    @Post("/update-booking/:id")
+    @Put("/update-booking/:id")
     @SuccessResponse("200", "Booking updated successfully")
     @Middlewares(verifyToken, verifyAdmin)
-    public async updateBooking(@Path() id: string, @Body() body: UpdateBookingDTO) {
-        try{
-        const booking=await Booking.findOneBy({id:id})
-        if(!booking){
-            return {message:"booking not found"}
-        }
-        //     let startTime= new Date(body?.start_time)
-        //     let endTime= new Date(body?.end_time)
-        //     let date= new Date(body?.date)
-        //    if(startTime.getTime()===endTime.getTime() ){
-        //     this.setStatus(400)
-        //     return {message:"start time and end time cannot be same"}
-        //    }
-        //    if(startTime.getTime()>endTime.getTime()){
-        //     this.setStatus(400)
-        //     return {message:"start time cannot be greater than end time"}
-        //    }
-        //     const existBooking = await Booking.createQueryBuilder("booking").where({ date: date }).andWhere({ start_time: startTime}).andWhere({ end_time: endTime }).getOne()
-        //     if (existBooking) {
-        //         this.setStatus(400)
-        //         return { message: "booking already exist" }
-        //     }
-            const updateBooking= BookingServices.updateBooking(id,body)
-            if(!updateBooking){
+    public async updateBooking(@Path() id: string, @Body() body: Partial<Booking>){
+        try {
+            const booking = await Booking.findOneBy({ id: id })
+            if (!booking) {
+                this.setStatus(400)
+                return { message: "booking not found" }
+            }
+            const startTime= body.start_time?new Date(body.start_time):booking.start_time
+            const endTime= body.end_time?new Date(body.end_time):booking.end_time
+            const date= body.date? new Date(body.date):booking.date
+            if (startTime.getTime() === endTime.getTime()) {
+                this.setStatus(400)
+                return { message: "start time and end time cannot be same" }
+            }
+             if (startTime.getTime() > endTime.getTime()) {
+                this.setStatus(400)
+                return { message: "start time cannot be greater than end time" }
+            }
+             const existBooking = await Booking.createQueryBuilder("booking").where({ date: date }).andWhere({ start_time: startTime }).andWhere({ end_time: endTime }).getOne()
+            if (existBooking) {
+                this.setStatus(400)
+                return { message: "booking already exist" }
+            }
+            const updateBooking = await BookingServices.updateBooking(id,{
+               ...body,
+                start_time:startTime,
+                end_time:endTime,
+                date:date
+            })
+            if (!updateBooking) {
                 this.setStatus(404)
                 return { message: "booking not found" }
             }
             this.setStatus(200)
             return { message: "booking updated successfully", data: updateBooking }
 
-        }catch(error){
+        } catch (error) {
             console.log("update booking error", error)
             this.setStatus(500)
             return { message: "internal server error" }
-        }  
+        }
     }
-    
+
 }
