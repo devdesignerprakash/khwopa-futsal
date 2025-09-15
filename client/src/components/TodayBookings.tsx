@@ -1,4 +1,9 @@
+import { useFetch } from "../hooks/useFetch"
+
 function Bookings() {
+  const response= useFetch("/booking/all-bookings")
+  console.log(response)
+
   return (
     <div className="flex flex-col w-full max-w-7xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
       {/* Header */}

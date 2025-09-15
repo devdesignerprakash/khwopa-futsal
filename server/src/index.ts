@@ -9,13 +9,17 @@ import cookieParser from 'cookie-parser'
 // import swaggerDocument from ""
 
 const app= express()
+app.use(cors({
+    origin:true,
+    credentials:true
+}))
 
 // json data
 app.use(express.json())
 app.use(cookieParser())
 app.use(express.urlencoded({extended:true}))
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-app.use(cors())
+
 RegisterRoutes(app)
 
 //running server

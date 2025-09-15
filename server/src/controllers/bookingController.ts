@@ -52,7 +52,7 @@ export class BookingController extends Controller {
 */
     @Get("/all-bookings")
     @SuccessResponse("200", "Booking fetched successfully")
-    @Middlewares(verifyToken)
+    // @Middlewares(verifyToken)
     public async getAllBooking() {
         try {
             const bookings = await Booking.find()
