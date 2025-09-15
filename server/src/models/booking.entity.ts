@@ -1,11 +1,8 @@
-import { Column, Entity, JoinColumn, OneToMany, OneToOne } from "typeorm";
+import { Column, Entity, OneToOne } from "typeorm";
 import { BaseEntity } from "./base.entity";
 import { IsNotEmpty } from "class-validator";
 import { BookedByUser } from "./bookedbyUser.entity";
-import { Status } from "../utils/status.enum";
-
-
-
+import { BookingStatus } from "../utils/status.enum";
 
 @Entity()
 export class Booking extends BaseEntity {
@@ -25,11 +22,11 @@ export class Booking extends BaseEntity {
     @Column(
         {
             type: 'enum',
-            enum: Status,
-            default: Status.NOT_BOOKED
+            enum: BookingStatus,
+            default: BookingStatus.NOT_BOOKED
         }
     )
-    status: Status
+    bookingStatus: BookingStatus
     @OneToOne(() => BookedByUser, bookedByUser => bookedByUser.booking)
     bookedBy?: BookedByUser[];
 }

@@ -1,4 +1,5 @@
-import { Status } from "../utils/status.enum"
+
+import { BookingStatus } from "../utils/status.enum"
 
 export interface BookingDTO{
     start_time:string,
@@ -9,5 +10,11 @@ export interface BookingDTO{
 
 
 export interface UpdateBookingDTO extends Partial<BookingDTO>{
-    status?:Status
+    status?:BookingStatus
+}
+
+
+export interface BookedUserDTO{
+ userId:string,
+  bookingId:string
 }

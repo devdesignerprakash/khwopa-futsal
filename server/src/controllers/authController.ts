@@ -1,7 +1,7 @@
 import { LoginDto, RegisterDto } from "../DTOs/auth.dto";
 import User from "../models/user.entity";
 import AuthServices from "../services/auth.services";
-import { Body, Controller, Post, Res, Route, SuccessResponse, Tags, TsoaResponse } from "tsoa";
+import { Body, Controller, Post, Res, Route, SuccessResponse, Tags} from "tsoa";
 import bcrypt from 'bcryptjs'
 import { generateToken } from "../utils/token";
 

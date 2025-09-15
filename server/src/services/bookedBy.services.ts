@@ -1,0 +1,18 @@
+import { BookedUserDTO } from "../DTOs/booking.dto";
+import { BookedByUser } from "../models/bookedbyUser.entity"
+import { Booking } from "../models/booking.entity";
+import User from "../models/user.entity";
+import { BookingStatus } from "../utils/status.enum";
+
+
+export class BookedByServices {
+    public static async createBooked(data: BookedUserDTO) {
+        const bookedUser = BookedByUser.create({
+            user: { id: data.userId } as User,
+            booking: { id: data.bookingId } as Booking,
+        })
+        await bookedUser.save()
+       await Booking.update(data.bookingId, { bookingStatus: BookingStatus.PENDING });
+        return bookedUser
+    }
+}
