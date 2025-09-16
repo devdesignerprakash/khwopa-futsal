@@ -1,21 +1,42 @@
-import { useState } from "react";
+import type { BookingDTO } from "../DTOs/bookingDTO";
+import { useFetch } from "../hooks/useFetch";
+import { useState, useEffect } from "react";
 
-// Helper to format YYYY-MM-DD
-const formatDate = (date:Date) => date.toISOString().split("T")[0];
+// Helper to format YYYY-MM-DD in UTC
+const formatDateUTC = (date: Date) => date.toISOString().split("T")[0];
+
+// Helper to format time as "hh:mm AM/PM"
+const formatTime = (timeStr: string) =>
+  new Date(timeStr).toLocaleTimeString("en-US", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  });
 
 export default function Bookings() {
+  const [allBookings, setAllBookings] = useState<BookingDTO[]>([]);
+  const { data } = useFetch<BookingDTO[]>("/booking/all-bookings");
+
+  useEffect(() => {
+    if (data) {
+      // @ts-ignore
+      setAllBookings(data.data);
+    }
+  }, [data]);
+
   const today = new Date();
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
-  const [selectedDate, setSelectedDate] = useState(formatDate(today));
-  const [selectedTime, setSelectedTime] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(formatDateUTC(today));
+  const [selectedTime, setSelectedTime] = useState<string | null>(null);
 
-  // Dummy slots
-  const availableSlots = {
-    "2025-08-28": ["10:00 AM", "11:00 AM", "12:00 PM"],
-    "2025-08-29": ["9:00 AM", "1:00 PM", "2:00 PM"],
-    "2025-09-01": ["7:00 AM", "8:00 AM", "12:00 PM", "4:00 PM"],
-  };
+  // Group bookings by date in UTC
+  const bookingsByDate: Record<string, BookingDTO[]> = {};
+  allBookings.forEach((booking) => {
+    const dateKey = formatDateUTC(new Date(booking.date));
+    if (!bookingsByDate[dateKey]) bookingsByDate[dateKey] = [];
+    bookingsByDate[dateKey].push(booking);
+  });
 
   // Generate days of current month
   const firstDay = new Date(currentYear, currentMonth, 1);
@@ -48,7 +69,6 @@ export default function Bookings() {
     <div className="flex h-screen bg-gray-100 p-6 gap-6">
       {/* Left side: Calendar */}
       <div className="w-96 bg-white shadow-lg rounded-xl p-6">
-        {/* Calendar header */}
         <div className="flex items-center justify-between mb-4">
           <button
             onClick={handlePrevMonth}
@@ -70,10 +90,9 @@ export default function Bookings() {
           </button>
         </div>
 
-        {/* Calendar grid */}
         <div className="grid grid-cols-7 gap-2 text-center">
           {days.map((day) => {
-            const dateStr = formatDate(day);
+            const dateStr = formatDateUTC(day);
             const isPast = day < new Date().setHours(0, 0, 0, 0);
             const isSelected = selectedDate === dateStr;
 
@@ -108,19 +127,29 @@ export default function Bookings() {
         </h2>
 
         <div className="flex flex-wrap gap-3">
-          {availableSlots[selectedDate]?.map((time) => (
-            <button
-              key={time}
-              onClick={() => setSelectedTime(time)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium ${
-                selectedTime === time
-                  ? "bg-green-500 text-white"
-                  : "bg-gray-200 text-gray-800 hover:bg-gray-300"
-              }`}
-            >
-              {time}
-            </button>
-          )) || (
+          {bookingsByDate[selectedDate]?.length ? (
+            bookingsByDate[selectedDate].map((booking) => {
+              const time = formatTime(booking.start_time);
+              const isBooked = booking.bookingStatus !== "not booked";
+
+              return (
+                <button
+                  key={booking.id}
+                  onClick={() => !isBooked && setSelectedTime(time)}
+                  disabled={isBooked}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium ${
+                    selectedTime === time
+                      ? "bg-green-500 text-white"
+                      : isBooked
+                      ? "bg-red-200 text-red-700 cursor-not-allowed"
+                      : "bg-gray-200 text-gray-800 hover:bg-gray-300"
+                  }`}
+                >
+                  {time}
+                </button>
+              );
+            })
+          ) : (
             <p className="text-gray-500">No slots available for this date.</p>
           )}
         </div>
