@@ -39,8 +39,8 @@ export default function Bookings() {
   });
 
   // Generate days of current month
-  const firstDay = new Date(currentYear, currentMonth, 1);
-  const lastDay = new Date(currentYear, currentMonth + 1, 0);
+  const firstDay = new Date (Date.UTC(currentYear, currentMonth, 1));
+  const lastDay = new Date(Date.UTC(currentYear, currentMonth + 1, 0));
 
   const days = [];
   for (let d = new Date(firstDay); d <= lastDay; d.setDate(d.getDate() + 1)) {
@@ -93,7 +93,7 @@ export default function Bookings() {
         <div className="grid grid-cols-7 gap-2 text-center">
           {days.map((day) => {
             const dateStr = formatDateUTC(day);
-            const isPast = day < new Date().setHours(0, 0, 0, 0);
+            const isPast = day< new Date().setHours(0, 0, 0, 0);
             const isSelected = selectedDate === dateStr;
 
             return (
