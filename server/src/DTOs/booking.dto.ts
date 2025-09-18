@@ -15,9 +15,9 @@ export interface UpdateBookingDTO extends Partial<BookingDTO>{
 
 
 export interface BookedUserDTO{
- userId:string,
   bookingId:string
 }
+
 export interface UpdateBookedStatusDTO{
     status:BookingStatus
 }

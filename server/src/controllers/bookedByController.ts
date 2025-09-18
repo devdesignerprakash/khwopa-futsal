@@ -1,10 +1,11 @@
 import { BookedByServices } from "../services/bookedBy.services";
 import { BookedUserDTO, UpdateBookedStatusDTO, UpdateBookingDTO } from "../DTOs/booking.dto";
-import { Body, Controller, Delete, Get, Middlewares, Path, Post, Put, Route, SuccessResponse, Tags } from "tsoa";
+import { Body, Controller, Delete, Get, Middlewares, Path, Post, Put, Request, Route, SuccessResponse, Tags } from "tsoa";
 import { Booking } from "../models/booking.entity";
 import { BookingStatus } from "../utils/status.enum";
 import { verifyAdmin, verifyToken } from "../utils/token";
 import { BookedByUser } from "../models/bookedbyUser.entity";
+
 
 
 
@@ -18,8 +19,11 @@ export class bookeByController extends Controller{
 @Post("/book")
 @Middlewares(verifyToken)
 @SuccessResponse("201", "Created")
-public async createBooking(@Body()body:BookedUserDTO) {
+public async createBooking(@Request()req:any,@Body()body:BookedUserDTO) {
     try{
+        console.log(req.userId)
+        console.log(body)
+        const {userId}= req.userId
        const booking= await Booking.findOne({where:{id:body.bookingId}})
        if (!booking) {
         this.setStatus(404)
@@ -31,7 +35,7 @@ public async createBooking(@Body()body:BookedUserDTO) {
         this.setStatus(400)
         return {message:"Booking already exist"}
        }
-       const bookedUser= await BookedByServices.createBooked(body)
+       const bookedUser= await BookedByServices.createBooked(userId,body)
        this.setStatus(201)
        return {data:bookedUser}
 

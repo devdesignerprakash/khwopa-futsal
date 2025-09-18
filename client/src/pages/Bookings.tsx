@@ -1,3 +1,4 @@
+"../utils/axiosInterceptor";
 import type { BookingDTO } from "../DTOs/bookingDTO";
 import { useFetch } from "../hooks/useFetch";
 import { useState, useEffect } from "react";
@@ -11,6 +12,7 @@ const formatTime = (timeStr: string) =>
     hour: "2-digit",
     minute: "2-digit",
     hour12: true,
+    timeZone:"UTC"
   });
 
 export default function Bookings() {
@@ -64,6 +66,13 @@ export default function Bookings() {
       setCurrentMonth(currentMonth - 1);
     }
   };
+  // const handleBooked=async()=>{
+  //   const response= await api.post("/bookedBy/book",{
+  //     bookingId:
+  //     userId:
+
+  //   })
+  // }
 
   return (
     <div className="flex h-screen bg-gray-100 p-6 gap-6">
@@ -80,6 +89,7 @@ export default function Bookings() {
             {new Date(currentYear, currentMonth).toLocaleString("default", {
               month: "long",
               year: "numeric",
+
             })}
           </h2>
           <button
@@ -93,7 +103,7 @@ export default function Bookings() {
         <div className="grid grid-cols-7 gap-2 text-center">
           {days.map((day) => {
             const dateStr = formatDateUTC(day);
-            const isPast = day< new Date().setHours(0, 0, 0, 0);
+            const isPast = day.getTime()< new Date().setHours(0,0,0);
             const isSelected = selectedDate === dateStr;
 
             return (
