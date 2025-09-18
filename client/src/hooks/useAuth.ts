@@ -1,5 +1,6 @@
 import { useState } from "react";
 import api from "../utils/axiosInterceptor";
+import type { AxiosError } from "axios";
 
 interface UseAuthReturn<TResponse, TBody> {
   data: TResponse | null;
@@ -24,6 +25,7 @@ export function UseAuth<TResponse = any, TBody = any>(url: string): UseAuthRetur
       // Handle backend errors even if status is 200
       if ((response.data as any).success === false || (response.data as any).error) {
         const message = (response.data as any).message || "Something went wrong";
+      
         setError(message);
         throw new Error(message);
       }
@@ -31,6 +33,7 @@ export function UseAuth<TResponse = any, TBody = any>(url: string): UseAuthRetur
       setData(response.data);
       return response.data;
     } catch (err: any) {
+      console.log("validation error",err as AxiosError)
       const message = err?.response?.data?.message || err?.message || "Something went wrong";
       setError(message);
       throw new Error(message); // Re-throw for the calling component

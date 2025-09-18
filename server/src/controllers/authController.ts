@@ -1,9 +1,10 @@
 import { LoginDto, RegisterDto } from "../DTOs/auth.dto";
 import User from "../models/user.entity";
 import AuthServices from "../services/auth.services";
-import { Body, Controller, Post, Res, Route, SuccessResponse, Tags} from "tsoa";
+import { Body, Controller, Middlewares, Post, Route, SuccessResponse, Tags} from "tsoa";
 import bcrypt from 'bcryptjs'
 import { generateToken } from "../utils/token";
+import { validationMiddleware } from "../utils/validator";
 
 @Route("auth")
 @Tags("Auth")
@@ -40,7 +41,9 @@ export class AuthController extends Controller {
       };
     }
   }
+ 
   @Post("/login")
+  @Middlewares(validationMiddleware(LoginDto))
   @SuccessResponse("200", "User logged in Successfully")
   public async login(@Body() body: LoginDto) {
     try {
