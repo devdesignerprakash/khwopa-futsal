@@ -3,9 +3,21 @@
 
 import logo from '../assets/logo.png'
 import { Link, useNavigate} from 'react-router-dom'
+import Cookies from 'js-cookie'
+import { useEffect, useState } from 'react'
 
 
 const Navbar = () => {
+    const [isLoggedIn, setIsLoggedIn]= useState<Boolean>(false)
+    console.log(Cookies.get('token'))
+    useEffect(()=>{
+        const token = Cookies.get('token')
+        console.log(token)
+        if(token){
+            setIsLoggedIn(true)
+        }
+    },[])
+
     const navigate=useNavigate()
     return (
         <div className=" w-fullb mx-auto bg-white shadow-lg p-2 m-2">
@@ -48,7 +60,7 @@ const Navbar = () => {
                     </ul>
                 </div>
                 <div className='flex gap-4 items-center'>
-                     <Link to="/login" className='w-25 text-center text-white font-bold bg-[#122754] hover:bg-[#122754] cursor-pointer p-2 rounded-lg'><span>Login</span></Link>
+                     <Link to="/login" className='w-25 text-center text-white font-bold bg-[#122754] hover:bg-[#122754] cursor-pointer p-2 rounded-lg'><span>{isLoggedIn?"Logout":"Login"}</span></Link>
                 </div>
             </div>
         </div>
