@@ -10,7 +10,7 @@ export interface LoginResponse{
     
 }
 export interface RegisterDTO{
-    "PhoneNumber"?:string,
+    "phoneNumber"?:string,
     "email"?:string,
     "password":string,
     "fullName":string
