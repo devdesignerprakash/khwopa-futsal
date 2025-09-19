@@ -3,8 +3,14 @@ import type { BookingDTO } from "../DTOs/bookingDTO";
 import { useFetch } from "../hooks/useFetch";
 import { useState, useEffect } from "react";
 
+
+
+
 // Helper to format YYYY-MM-DD in UTC
 const formatDateUTC = (date: Date) => date.toISOString().split("T")[0];
+
+
+
 
 // Helper to format time as "hh:mm AM/PM"
 const formatTime = (timeStr: string) =>
@@ -12,8 +18,9 @@ const formatTime = (timeStr: string) =>
     hour: "2-digit",
     minute: "2-digit",
     hour12: true,
-    timeZone:"UTC"
+    timeZone: "UTC",
   });
+  
 
 export default function Bookings() {
   const [allBookings, setAllBookings] = useState<BookingDTO[]>([]);

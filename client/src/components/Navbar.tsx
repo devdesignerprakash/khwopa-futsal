@@ -7,9 +7,11 @@ import Cookies from 'js-cookie'
 import { useEffect, useState } from 'react'
 
 
+
 const Navbar = () => {
     const [isLoggedIn, setIsLoggedIn]= useState<Boolean>(false)
-    console.log(Cookies.get('token'))
+
+
     useEffect(()=>{
         const token = Cookies.get('token')
         console.log(token)
