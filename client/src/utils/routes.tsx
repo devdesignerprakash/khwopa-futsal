@@ -9,6 +9,7 @@ import SignUp from "../auth/SignUp";
 import ForgetPassword from "../pages/ForgetPassword";
 import Bookings from "../pages/Bookings";
 import Contact from "../pages/Contact";
+import  AdminDashboard from "../admin/AdminDashboard";
 
 
 
@@ -32,7 +33,7 @@ const router = createBrowserRouter([{
     },{
         path:"/contact",
         element:<Contact/>
-    }
+    },
 
     ],
 },
@@ -47,6 +48,9 @@ const router = createBrowserRouter([{
 {
     path:"/forget-password",
     element:<ForgetPassword/>
+},
+{path:"/admin/dashboard",
+    element:<AdminDashboard/>
 }
 ])
 

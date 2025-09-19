@@ -3,7 +3,8 @@ import User from "../models/user.entity";
 import AuthServices from "../services/auth.services";
 import { Body, Controller, Get, Middlewares, Post, Request, Route, SuccessResponse, Tags} from "tsoa";
 import bcrypt from 'bcryptjs'
-import { generateToken, verifyToken } from "../utils/token";
+import { generateToken } from "../utils/token";
+import jwt from "jsonwebtoken";
 import { validationMiddleware } from "../utils/validator";
 
 
@@ -91,14 +92,13 @@ export class AuthController extends Controller {
 
   //check whether user is logged in or not
   @Get("/status")
-  @Middlewares(verifyToken)
   @SuccessResponse("200", "User is logged in")
-  public async checkStatus(@Request() req: { headers: { cookie?: string } }): Promise<{ isLoggedIn: boolean }> {
+  public async checkStatus(@Request() req: { headers: { cookie?: string } }): Promise<{ isLoggedIn: boolean, role:string | null }> {
     try {
         const cookiesHeader = req.headers.cookie;
         if (!cookiesHeader) {
             this.setStatus(200);
-            return { isLoggedIn: false };
+            return { isLoggedIn: false, role: null };
         }
 
         const tokenCookie = cookiesHeader
@@ -106,18 +106,20 @@ export class AuthController extends Controller {
             .find(cookie => cookie.trim().startsWith('token='));
         
         const token = tokenCookie?.split('=')[1];
-
-        if (token && token.trim()) {
+        const verify = token ? jwt.verify(token, process.env.JWT_SECRET || 'mysuperheroismydad') as { userId: string, role?: string } : null;
+        const role = verify?.role || null;
+        
+        if (token && token.trim())  {
             this.setStatus(200);
-            return { isLoggedIn: true };
+            return { isLoggedIn: true,role };
         }
 
         this.setStatus(200);
-        return { isLoggedIn: false };
+        return { isLoggedIn: false,role: null };
     } catch (error) {
         console.error('Error checking login status:', error);
         this.setStatus(500);
-        return { isLoggedIn: false };
+        return { isLoggedIn: false,role: null };
     }
 }
 }

@@ -12,6 +12,7 @@ import { toast } from 'react-toastify'
 const Navbar = () => {
     const [isLoggedIn, setIsLoggedIn]= useState<Boolean>(false)
     const {checkStatus}=useCheckLoggedIn("auth/status")
+
     useEffect(()=>{
         checkStatus().then((res)=>{
             setIsLoggedIn(res.isLoggedIn)
@@ -28,7 +29,6 @@ const Navbar = () => {
             setIsLoggedIn(false)
             toast.success("Logged out successfully")
             navigate("/")
-            console.log(response.data.message)
 
         }
         catch(err){
