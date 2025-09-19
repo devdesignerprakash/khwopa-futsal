@@ -7,6 +7,7 @@ export interface LoginDTO{
 export interface AuthResponse{
 
     message:string
+    role?:string
     
 }
 export interface RegisterDTO{

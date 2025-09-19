@@ -20,7 +20,7 @@ export function UseAuth<TResponse = any, TBody = any>(
   url: string
 ): UseAuthReturn<TResponse, TBody> {
   const [data, setData] = useState<TResponse | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null); 
   const [validationErrors, setValidationErrors] = useState<Record<string, string> | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
  
@@ -77,5 +77,5 @@ export function UseAuth<TResponse = any, TBody = any>(
     setValidationErrors(null);
   };
 
-  return { data, error, loading, AuthExecution, clearError, validationErrors};
+  return { data, error, loading, AuthExecution, clearError, validationErrors}
 }

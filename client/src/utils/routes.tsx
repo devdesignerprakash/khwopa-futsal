@@ -9,9 +9,9 @@ import SignUp from "../auth/SignUp";
 import ForgetPassword from "../pages/ForgetPassword";
 import Bookings from "../pages/Bookings";
 import Contact from "../pages/Contact";
-import  AdminDashboard from "../admin/AdminDashboard";
-
-
+import MainAdminLayout from "../components/MainAdminLayout";
+import AdminDashboard from "../admin/AdminDashboard";
+import AdminBooking from "../admin/AdminBooking";
 
 const router = createBrowserRouter([{
     path: "/",
@@ -49,8 +49,22 @@ const router = createBrowserRouter([{
     path:"/forget-password",
     element:<ForgetPassword/>
 },
-{path:"/admin/dashboard",
-    element:<AdminDashboard/>
+//admin routes
+{
+path:"/admin",
+ element:<MainAdminLayout/>,
+ children:[
+    {
+        path:"",
+        element:<AdminDashboard/>
+    },
+    {
+        path:"adminBooking",
+        element:<AdminBooking/>
+
+    }
+ ]
+ 
 }
 ])
 

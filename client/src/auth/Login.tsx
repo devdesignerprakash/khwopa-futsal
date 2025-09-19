@@ -8,7 +8,6 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { Alert, AlertDescription } from "@shadcn/components/ui/alert";
 
-
 const Login = () => {
   const [loginData, setLoginData] = useState<LoginDTO>({
     phoneNumber: "",
@@ -33,7 +32,11 @@ const Login = () => {
       const res = await AuthExecution(loginData);
       if (res) {
         toast.success(res.message);
-        navigate("/");
+        if (res?.role == "admin") {
+          navigate("/admin");
+        } else {
+          navigate("/");
+        }
       }
     } catch (err: any) {
       // Use the error message from the caught error instead of the hook state
@@ -68,7 +71,7 @@ const Login = () => {
               </AlertDescription>
             </Alert>
           )}
-          
+
           <Input
             type="password"
             placeholder="Password"
@@ -78,10 +81,8 @@ const Login = () => {
             onChange={handleInputChange}
           />
           {validationErrors && validationErrors.password && (
-            <Alert  className="border-none whitespace-break-spaces text-blue-900 font-bold">
-              <AlertDescription>
-                {validationErrors.password}
-              </AlertDescription>
+            <Alert className="border-none whitespace-break-spaces text-blue-900 font-bold">
+              <AlertDescription>{validationErrors.password}</AlertDescription>
             </Alert>
           )}
 
