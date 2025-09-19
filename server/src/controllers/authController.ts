@@ -16,6 +16,7 @@ export class AuthController extends Controller {
    * @returns Registration response with user details
    */
   @Post("/register")
+  @Middlewares(validationMiddleware(RegisterDto))
   @SuccessResponse("201", "User registered successfully")
   public async registerUser(@Body() body: RegisterDto) {
     try {
@@ -48,14 +49,11 @@ export class AuthController extends Controller {
   public async login(@Body() body: LoginDto) {
     try {
       const existUser = await User.findOne({
-        where: [
-          {
-            email: body.email
-          },
+        where: 
           {
             phoneNumber: body.phoneNumber
           }
-        ]
+        
       })
       if (!existUser) {
         this.setStatus(404)
