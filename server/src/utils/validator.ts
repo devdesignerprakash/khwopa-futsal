@@ -23,7 +23,7 @@ export function validationMiddleware<T extends object>(dtoClass: new () => T) {
       errors.forEach((err) => {
         const messages = Object.values(err.constraints || {});
         if (messages.length > 0) {
-          formattedErrors[err.property] = messages.join(", ");
+          formattedErrors[err.property] = messages.map(m => `• ${m}`).join("\n");
         }
       });
 

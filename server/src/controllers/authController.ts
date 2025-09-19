@@ -21,7 +21,7 @@ export class AuthController extends Controller {
   public async registerUser(@Body() body: RegisterDto) {
     try {
       // Check if user already exists
-      const existUser = await User.findOne({ where: { email: body.email } });
+      const existUser = await User.findOne({ where: [{ email: body.email }, { phoneNumber: body.phoneNumber }] });
       if (existUser) {
         this.setStatus(400);
         return { message: "User already exists" };

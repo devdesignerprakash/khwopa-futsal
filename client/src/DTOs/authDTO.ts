@@ -4,14 +4,15 @@ export interface LoginDTO{
     "password":string
 }
 
-export interface LoginResponse{
+export interface AuthResponse{
 
     message:string
     
 }
 export interface RegisterDTO{
-    "phoneNumber"?:string,
-    "email"?:string,
+    "phoneNumber":string,
+   "address":string,
+    "email":string,
     "password":string,
     "fullName":string
 }
