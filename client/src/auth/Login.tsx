@@ -13,7 +13,7 @@ const Login = () => {
     password: ""
   })
   const navigate = useNavigate()
-  const {loading, AuthExecution, clearError } = UseAuth<LoginResponse, LoginDTO>('/auth/login')
+  const {error,loading, AuthExecution, clearError,validationErrors } = UseAuth<LoginResponse, LoginDTO>('/auth/login')
   
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -35,10 +35,11 @@ const Login = () => {
       toast.error(err.message || "Login failed")
     }
   }
-
+  console.log(error)
   return (
     <div className="w-full min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
       <div className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-sm flex flex-col items-center gap-6">
+          
 
         {/* Logo */}
         <img src={logo} alt="logo" className="w-20 h-20" />
@@ -55,6 +56,9 @@ const Login = () => {
             value={loginData.phoneNumber} 
             onChange={handleInputChange} 
           />
+          {validationErrors && validationErrors.phoneNumber && (
+            <p className="text-red-500 text-sm">{validationErrors.phoneNumber}</p>
+          )}
           <Input 
             type="password" 
             placeholder="Password" 
@@ -63,6 +67,9 @@ const Login = () => {
             value={loginData.password} 
             onChange={handleInputChange} 
           />
+          {validationErrors && validationErrors.password && (
+            <p className="text-red-500 text-sm">{validationErrors.password}</p>
+          )}
 
           <div className="flex items-center justify-between text-sm text-gray-600">
             <label className="flex items-center gap-2">
