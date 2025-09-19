@@ -3,24 +3,40 @@
 
 import logo from '../assets/logo.png'
 import { Link, useNavigate} from 'react-router-dom'
-import Cookies from 'js-cookie'
 import { useEffect, useState } from 'react'
-
-
+import { useCheckLoggedIn } from '../hooks/UseStatus'
+import { Button } from '@shadcn/components/ui/button'
+import api from '../utils/axiosInterceptor'
+import { toast } from 'react-toastify'
 
 const Navbar = () => {
     const [isLoggedIn, setIsLoggedIn]= useState<Boolean>(false)
-
-
+    const {checkStatus}=useCheckLoggedIn("auth/status")
     useEffect(()=>{
-        const token = Cookies.get('token')
-        console.log(token)
-        if(token){
-            setIsLoggedIn(true)
+        checkStatus().then((res)=>{
+            setIsLoggedIn(res.isLoggedIn)
         }
+        ).catch((err)=>{
+            console.log("Error checking login status:",err)
+            setIsLoggedIn(false)
+        })
     },[])
-
     const navigate=useNavigate()
+    const handleLogout=async()=>{
+        try{
+            const response= await api.post("auth/logout",{}, { withCredentials: true });
+            setIsLoggedIn(false)
+            toast.success("Logged out successfully")
+            navigate("/")
+            console.log(response.data.message)
+
+        }
+        catch(err){
+            console.log("Error logging out:",err)
+        
+        }
+    }
+   
     return (
         <div className=" w-fullb mx-auto bg-white shadow-lg p-2 m-2">
             <div className='flex items-center justify-between'>
@@ -61,9 +77,12 @@ const Navbar = () => {
                         </Link>
                     </ul>
                 </div>
+                {isLoggedIn?
                 <div className='flex gap-4 items-center'>
-                     <Link to="/login" className='w-25 text-center text-white font-bold bg-[#122754] hover:bg-[#122754] cursor-pointer p-2 rounded-lg'><span>{isLoggedIn?"Logout":"Login"}</span></Link>
-                </div>
+                     <Button className='w-25 text-center text-white font-bold bg-[#122754] hover:bg-[#122754] cursor-pointer p-2 rounded-lg' onClick={handleLogout}><span>Logout</span></Button>
+                </div>:<div className='flex gap-4 items-center'>
+                     <Link to="/login" className='w-25 text-center text-white font-bold bg-[#122754] hover:bg-[#122754] cursor-pointer p-2 rounded-lg'><span>Login</span></Link>
+                </div>}
             </div>
         </div>
     )

@@ -23,6 +23,7 @@ export function UseAuth<TResponse = any, TBody = any>(
   const [error, setError] = useState<string | null>(null);
   const [validationErrors, setValidationErrors] = useState<Record<string, string> | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+ 
 
   const AuthExecution = async (body: TBody): Promise<TResponse> => {
     setLoading(true);
@@ -76,5 +77,5 @@ export function UseAuth<TResponse = any, TBody = any>(
     setValidationErrors(null);
   };
 
-  return { data, error, loading, AuthExecution, clearError, validationErrors };
+  return { data, error, loading, AuthExecution, clearError, validationErrors};
 }

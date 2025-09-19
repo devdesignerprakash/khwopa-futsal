@@ -1,10 +1,11 @@
 import { LoginDto, RegisterDto } from "../DTOs/auth.dto";
 import User from "../models/user.entity";
 import AuthServices from "../services/auth.services";
-import { Body, Controller, Middlewares, Post, Route, SuccessResponse, Tags} from "tsoa";
+import { Body, Controller, Get, Middlewares, Post, Request, Route, SuccessResponse, Tags} from "tsoa";
 import bcrypt from 'bcryptjs'
-import { generateToken } from "../utils/token";
+import { generateToken, verifyToken } from "../utils/token";
 import { validationMiddleware } from "../utils/validator";
+
 
 @Route("auth")
 @Tags("Auth")
@@ -67,7 +68,7 @@ export class AuthController extends Controller {
       const token = generateToken({ userId: existUser.id, role: existUser.role })
      this.setHeader("Set-Cookie", `token=${token}; HttpOnly; Path=/; Max-Age=${60 * 60 * 24}; SameSite=Lax`)
       this.setStatus(200)
-      return { message: "user logged in Successfully" }
+      return { message: "user logged in Successfully"}
     } catch (error) {
       this.setStatus(500);
       return {
@@ -87,6 +88,38 @@ export class AuthController extends Controller {
     this.setStatus(200);
     return { message: "User logged out successfully" };
   }
+
+  //check whether user is logged in or not
+  @Get("/status")
+  @Middlewares(verifyToken)
+  @SuccessResponse("200", "User is logged in")
+  public async checkStatus(@Request() req: { headers: { cookie?: string } }): Promise<{ isLoggedIn: boolean }> {
+    try {
+        const cookiesHeader = req.headers.cookie;
+        if (!cookiesHeader) {
+            this.setStatus(200);
+            return { isLoggedIn: false };
+        }
+
+        const tokenCookie = cookiesHeader
+            .split(';')
+            .find(cookie => cookie.trim().startsWith('token='));
+        
+        const token = tokenCookie?.split('=')[1];
+
+        if (token && token.trim()) {
+            this.setStatus(200);
+            return { isLoggedIn: true };
+        }
+
+        this.setStatus(200);
+        return { isLoggedIn: false };
+    } catch (error) {
+        console.error('Error checking login status:', error);
+        this.setStatus(500);
+        return { isLoggedIn: false };
+    }
+}
 }
 
 export default AuthController;
