@@ -12,10 +12,7 @@ function AdminBooking() {
         <h1 className="text-2xl font-bold text-gray-800 mb-4 md:mb-0">
           Bookings Management
         </h1>
-        <Button className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 flex items-center gap-2">
-          <Calendar className="w-5 h-5" />
-          Create Booking
-        </Button>
+       <CreateorEditBooking/>
       </div>
 
       {/* Summary Cards */}
@@ -78,7 +75,7 @@ function AdminBooking() {
           </table>
         </div>
       </div>
-      <CreateorEditBooking/>
+      
     </div>
   );
 }
