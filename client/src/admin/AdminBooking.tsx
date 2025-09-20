@@ -2,6 +2,7 @@
 
 import { Button } from "@shadcn/components/ui/button";
 import { Calendar, Users } from "lucide-react";
+import CreateorEditBooking from "../components/CreateorEditBooking";
 
 function AdminBooking() {
   return (
@@ -77,6 +78,7 @@ function AdminBooking() {
           </table>
         </div>
       </div>
+      <CreateorEditBooking/>
     </div>
   );
 }

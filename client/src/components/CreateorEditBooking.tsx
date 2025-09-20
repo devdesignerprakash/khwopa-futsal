@@ -1,6 +1,6 @@
 import { Button } from "@shadcn/components/ui/button";
 import { Input } from "@shadcn/components/ui/input";
-import {useState} from 'React'
+import {useState} from 'react'
 
 const CreateorEditBooking = () => {
       const [date, setDate] = useState<Date | undefined>(undefined)
@@ -40,6 +40,7 @@ const CreateorEditBooking = () => {
           </Button>
         </form>
       </div>
+     
     </div>
   );
 };
