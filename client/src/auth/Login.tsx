@@ -101,7 +101,7 @@ const Login = () => {
 
           {loading ? (
             <Button
-              className="w-full bg-[#233769] hover:bg-[#233769] text-white rounded-xl py-2"
+              className="w-full bg-[#233769] hover:bg-[#233779] text-white rounded-xl py-2"
               disabled
             >
               Please Wait..

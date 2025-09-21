@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { Button } from "@shadcn/components/ui/button";
-import { Input } from "@shadcn/components/ui/input";
-import { Calendar } from "@shadcn/components/ui/calendar";
+import { useState, type ChangeEvent, type FormEvent } from "react"
+import { Button } from "@shadcn/components/ui/button"
+import { Input } from "@shadcn/components/ui/input"
+import { Calendar } from "@shadcn/components/ui/calendar"
 import {
   Dialog,
   DialogContent,
@@ -9,18 +9,37 @@ import {
   DialogTitle,
   DialogTrigger,
   DialogFooter,
-} from "@shadcn/components/ui/dialog";
-import { Clock } from "lucide-react";
-import { Label } from "@shadcn/components/ui/label";
+} from "@shadcn/components/ui/dialog"
+import { Clock, Calendar as CalendarIcon } from "lucide-react"
+import { Label } from "@shadcn/components/ui/label"
+import { format } from "date-fns"
+import type { BookingDTO } from "src/DTOs/bookingDTO"
 
 const CreateorEditBooking = () => {
-  const [date, setDate] = useState<Date | undefined>(undefined);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined)
+  const [openCalendar, setOpenCalendar] = useState(false)
+  const [bookingData,setBookingData]= useState<BookingDTO>({
+    start_time:"",
+    end_time:"",
+    date:date.tolocaleString()|""
+
+  })
+
+  const handleTimeSelection=(e:ChangeEvent<HTMLInputElement>)=>{
+   
+
+  }
+  const handleSubmit=(e:FormEvent<HTMLFormElement>)=>{
+
+
+  }
+  
 
   return (
     <Dialog>
       {/* Trigger Button */}
       <DialogTrigger asChild>
-        <Button className="bg-blue-600 hover:bg-blue-700">
+        <Button className="bg-[#233769] hover:bg-[#1b2c54]">
           + Create Booking
         </Button>
       </DialogTrigger>
@@ -32,51 +51,73 @@ const CreateorEditBooking = () => {
             Create Booking
           </DialogTitle>
         </DialogHeader>
+
         <form className="space-y-5 mt-4">
           {/* Start Time */}
           <div className="space-y-1">
-            <Label
-              className="text-sm font-medium text-gray-700"
-              htmlFor="start-time"
-            >
-              start Time
+            <Label htmlFor="start-time" className="text-sm font-medium">
+              Start Time
             </Label>
             <div className="relative">
               <Clock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-              <Input type="time" id="start-time" step="1" className="pl-10" />
+              <Input type="time" id="start-time" step="1" className="pl-10" onChange={handleTimeSelection}/>
             </div>
           </div>
 
           {/* End Time */}
-          <div className="space-y-2">
-            <label htmlFor="end-time" className="text-sm font-medium">
+          <div className="space-y-1">
+            <Label htmlFor="end-time" className="text-sm font-medium">
               End Time
-            </label>
-            <Input type="time" id="end-time" step="1" defaultValue="10:00:00" />
+            </Label>
+            <div className="relative">
+              <Clock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+              <Input type="time" id="end-time" step="1" className="pl-10" />
+            </div>
           </div>
 
-          {/* Date Picker */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Booking Date</label>
-            <Calendar
-              mode="single"
-              selected={date}
-              onSelect={setDate}
-              className="rounded-md border shadow-sm"
-              captionLayout="dropdown"
-            />
+          {/* Booking Date */}
+          <div className="space-y-1">
+            <Label className="text-sm font-medium">Booking Date</Label>
+
+            {/* Date Trigger Button */}
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full justify-start text-left font-normal"
+              onClick={() => setOpenCalendar(true)}
+            >
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              {selectedDate ? format(selectedDate, "PPP") : "Select a date"}
+            </Button>
+
+            {/* Inline Dialog for Calendar */}
+            {openCalendar && (
+              <div className="mt-2 border rounded-md shadow-sm">
+                <Calendar
+                  mode="single"
+                  selected={selectedDate}
+                  onSelect={(d) => {
+                    setSelectedDate(d)
+                    setOpenCalendar(false) // close after selection
+                  }}
+                />
+              </div>
+            )}
           </div>
 
           {/* Actions */}
           <DialogFooter>
-            <Button type="submit" className="w-full">
+            <Button
+              type="submit"
+              className="w-full bg-[#233769] hover:bg-[#1b2c54]"
+            >
               Create Booking
             </Button>
           </DialogFooter>
         </form>
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}
 
-export default CreateorEditBooking;
+export default CreateorEditBooking
