@@ -1,6 +1,5 @@
-import { useState, type ChangeEvent, type FormEvent } from "react"
+import { useState, type FormEvent } from "react"
 import { Button } from "@shadcn/components/ui/button"
-import { Input } from "@shadcn/components/ui/input"
 import { Calendar } from "@shadcn/components/ui/calendar"
 import {
   Dialog,
@@ -10,10 +9,20 @@ import {
   DialogTrigger,
   DialogFooter,
 } from "@shadcn/components/ui/dialog"
-import { Clock, Calendar as CalendarIcon } from "lucide-react"
+import { Clock, CalendarIcon } from "lucide-react"
 import { Label } from "@shadcn/components/ui/label"
 import { format } from "date-fns"
 import type { BookingDTO } from "src/DTOs/bookingDTO"
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@shadcn/components/ui/select"
+import { timeSlots } from "../utils/timeSlots" // 24h format list: ["06:00","06:30",...,"21:00"]
+import { Input } from "@shadcn/components/ui/input"
 
 const CreateorEditBooking = () => {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined)
@@ -24,21 +33,41 @@ const CreateorEditBooking = () => {
     date: "",
   })
 
-  // Handle time input changes
-  const handleTimeSelection = (e: ChangeEvent<HTMLInputElement>) => {
-    const { id, value } = e.target
+  const formatTo12Hour = (time: string) => {
+    const [h, m] = time.split(":").map(Number)
+    const period = h >= 12 ? "PM" : "AM"
+    const hour12 = h % 12 === 0 ? 12 : h % 12
+    return `${hour12}:${m.toString().padStart(2, "0")} ${period}`
+  }
+
+    const handleAddOneHour=(time:string)=>{
+    const [hours, minutes] = time.split(':').map(Number)
+    let newHour= hours+1
+     const period = newHour>= 12 ? "PM" : "AM"
+     const hour12 = newHour% 12 === 0 ? 12 : newHour% 12
+    if (newHour>23) newHour=0
+    const value12= `${hour12}:${minutes.toString().padStart(2, '0')} ${period}`
+    const value24 = `${newHour}`
+    return {value12,value24}
+  
+  }
+
+  // Handle start time selection
+  const handleStartTime = (value: string) => {
+    const {value12,value24}= handleAddOneHour(value)
     setBookingData((prev) => ({
       ...prev,
-      [id]: value, // id must match start_time or end_time
+      start_time: value,
+      end_time: value24, // reset end time when start changes
     }))
   }
 
-  // Handle date selection from calendar
+  // Handle date selection
   const handleDateSelection = (date: Date) => {
     setSelectedDate(date)
     setBookingData((prev) => ({
       ...prev,
-      date: date.toLocaleDateString(), // store as string
+      date: date.toLocaleDateString(),
     }))
     setOpenCalendar(false)
   }
@@ -47,7 +76,7 @@ const CreateorEditBooking = () => {
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     console.log("Booking Data:", bookingData)
-    // Here you can call your API to create the booking
+    // Call API here
   }
 
   return (
@@ -75,14 +104,20 @@ const CreateorEditBooking = () => {
             </Label>
             <div className="relative">
               <Clock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-              <Input
-                type="time"
-                id="start_time"
-                step="1"
-                className="pl-10"
-                value={bookingData.start_time}
-                onChange={handleTimeSelection}
-              />
+              <Select onValueChange={handleStartTime} value={bookingData.start_time}>
+                <SelectTrigger className="pl-10 w-full">
+                  <SelectValue placeholder="Select start time" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {timeSlots.map((time) => (
+                      <SelectItem key={time} value={time}>
+                        {formatTo12Hour(time)}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
             </div>
           </div>
 
@@ -93,22 +128,13 @@ const CreateorEditBooking = () => {
             </Label>
             <div className="relative">
               <Clock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-              <Input
-                type="time"
-                id="end_time"
-                step="1"
-                className="pl-10"
-                value={bookingData.end_time}
-                onChange={handleTimeSelection}
-              />
+             <Input value={bookingData.end_time}/>
             </div>
           </div>
 
           {/* Booking Date */}
           <div className="space-y-1">
             <Label className="text-sm font-medium">Booking Date</Label>
-
-            {/* Date Trigger Button */}
             <Button
               type="button"
               variant="outline"
@@ -118,8 +144,6 @@ const CreateorEditBooking = () => {
               <CalendarIcon className="mr-2 h-4 w-4" />
               {selectedDate ? format(selectedDate, "PPP") : "Select a date"}
             </Button>
-
-            {/* Inline Calendar */}
             {openCalendar && (
               <div className="mt-2 border rounded-md shadow-sm">
                 <Calendar
