@@ -18,22 +18,37 @@ import type { BookingDTO } from "src/DTOs/bookingDTO"
 const CreateorEditBooking = () => {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined)
   const [openCalendar, setOpenCalendar] = useState(false)
-  const [bookingData,setBookingData]= useState<BookingDTO>({
-    start_time:"",
-    end_time:"",
-    date:date.tolocaleString()|""
-
+  const [bookingData, setBookingData] = useState<BookingDTO>({
+    start_time: "",
+    end_time: "",
+    date: "",
   })
 
-  const handleTimeSelection=(e:ChangeEvent<HTMLInputElement>)=>{
-   
-
+  // Handle time input changes
+  const handleTimeSelection = (e: ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target
+    setBookingData((prev) => ({
+      ...prev,
+      [id]: value, // id must match start_time or end_time
+    }))
   }
-  const handleSubmit=(e:FormEvent<HTMLFormElement>)=>{
 
-
+  // Handle date selection from calendar
+  const handleDateSelection = (date: Date) => {
+    setSelectedDate(date)
+    setBookingData((prev) => ({
+      ...prev,
+      date: date.toLocaleDateString(), // store as string
+    }))
+    setOpenCalendar(false)
   }
-  
+
+  // Handle form submit
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    console.log("Booking Data:", bookingData)
+    // Here you can call your API to create the booking
+  }
 
   return (
     <Dialog>
@@ -52,26 +67,40 @@ const CreateorEditBooking = () => {
           </DialogTitle>
         </DialogHeader>
 
-        <form className="space-y-5 mt-4">
+        <form className="space-y-5 mt-4" onSubmit={handleSubmit}>
           {/* Start Time */}
           <div className="space-y-1">
-            <Label htmlFor="start-time" className="text-sm font-medium">
+            <Label htmlFor="start_time" className="text-sm font-medium">
               Start Time
             </Label>
             <div className="relative">
               <Clock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-              <Input type="time" id="start-time" step="1" className="pl-10" onChange={handleTimeSelection}/>
+              <Input
+                type="time"
+                id="start_time"
+                step="1"
+                className="pl-10"
+                value={bookingData.start_time}
+                onChange={handleTimeSelection}
+              />
             </div>
           </div>
 
           {/* End Time */}
           <div className="space-y-1">
-            <Label htmlFor="end-time" className="text-sm font-medium">
+            <Label htmlFor="end_time" className="text-sm font-medium">
               End Time
             </Label>
             <div className="relative">
               <Clock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-              <Input type="time" id="end-time" step="1" className="pl-10" />
+              <Input
+                type="time"
+                id="end_time"
+                step="1"
+                className="pl-10"
+                value={bookingData.end_time}
+                onChange={handleTimeSelection}
+              />
             </div>
           </div>
 
@@ -90,16 +119,13 @@ const CreateorEditBooking = () => {
               {selectedDate ? format(selectedDate, "PPP") : "Select a date"}
             </Button>
 
-            {/* Inline Dialog for Calendar */}
+            {/* Inline Calendar */}
             {openCalendar && (
               <div className="mt-2 border rounded-md shadow-sm">
                 <Calendar
                   mode="single"
                   selected={selectedDate}
-                  onSelect={(d) => {
-                    setSelectedDate(d)
-                    setOpenCalendar(false) // close after selection
-                  }}
+                  onSelect={handleDateSelection}
                 />
               </div>
             )}
