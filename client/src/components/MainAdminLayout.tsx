@@ -5,17 +5,19 @@ import AdminNav from "./AdminNav";
 import NotAuthorized from "../pages/NotAuthorize";
 
 const MainAdminLayout = () => {
-  const context = useContext(UserContext);
+  const { isLoggedIn, user, loading } = useContext(UserContext);
   const [showSpinner, setShowSpinner] = useState(true);
 
+  // Minimum spinner display time: 1 second
   useEffect(() => {
-    // Minimum spinner time: 1 second
-    const timer = setTimeout(() => setShowSpinner(false), 1000);
-    return () => clearTimeout(timer);
-  }, []);
+    if (!loading) {
+      const timer = setTimeout(() => setShowSpinner(false), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [loading]);
 
-  // Context not loaded yet → show spinner
-  if (!context || showSpinner) {
+  // Show spinner while loading or during minimum delay
+  if (loading || showSpinner) {
     return (
       <div className="flex items-center justify-center h-screen">
         <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
@@ -23,16 +25,13 @@ const MainAdminLayout = () => {
     );
   }
 
-  const { isLoggedIn, user } = context;
-
-  // User is fetched but not admin → show not authorized
+  // User fetched but not admin → show not authorized
   if (!isLoggedIn || user?.role !== "admin") {
-    return (
-      <NotAuthorized/>
-    );
+    return <NotAuthorized />;
   }
 
   // User is admin → render layout
+  console.log("user from adminlayout", user);
   return (
     <div className="flex h-screen">
       <AdminNav />

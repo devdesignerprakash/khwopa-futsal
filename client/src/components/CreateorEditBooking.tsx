@@ -12,7 +12,7 @@ import {
 } from "@shadcn/components/ui/dialog";
 import { Clock, CalendarIcon } from "lucide-react";
 import { Label } from "@shadcn/components/ui/label";
-import { type BookingDTO } from "../DTOs/bookingDTO";
+import {  type CreateorEditBookingDTO } from "../DTOs/bookingDTO";
 import {
   Select,
   SelectContent,
@@ -34,7 +34,8 @@ const CreateorEditBooking = () => {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [openCalendar, setOpenCalendar] = useState(false);
   const navigate= useNavigate()
-  const [bookingData, setBookingData] = useState<BookingDTO>({
+  const [bookingData, setBookingData] = useState<CreateorEditBookingDTO>({
+    id:"",
     start_time: "",
     end_time: "",
     date: "",
@@ -68,6 +69,7 @@ const handleStartTime = (value24: string) => {
     start_time: convertTime(value24, formattedDate),
     end_time: convertTime(endValue24, formattedDate),
     date: formattedDate,
+
   });
 };
 

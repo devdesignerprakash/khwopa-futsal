@@ -1,4 +1,4 @@
-import { Circle, CircleAlert } from "lucide-react"; // icon from react-icons
+import { CircleAlert } from "lucide-react"; // icon from react-icons
 
 const NotAuthorized = () => {
   return (

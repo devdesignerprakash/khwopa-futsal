@@ -18,18 +18,17 @@ const formatTime = (timeStr: string) =>
     hour: "2-digit",
     minute: "2-digit",
     hour12: true,
-    timeZone: "UTC",
   });
   
 
 export default function Bookings() {
   const [allBookings, setAllBookings] = useState<BookingDTO[]>([]);
   const { data } = useFetch<BookingDTO[]>("/booking/all-bookings");
-
+console.log(data)
   useEffect(() => {
     if (data) {
       // @ts-ignore
-      setAllBookings(data.data);
+      setAllBookings(data.bookings);
     }
   }, [data]);
 

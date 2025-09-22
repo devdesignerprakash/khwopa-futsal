@@ -108,7 +108,6 @@ export class AuthController extends Controller {
         
         const token = tokenCookie?.split('=')[1];
         const verify = token ? jwt.verify(token, process.env.JWT_SECRET || 'mysuperheroismydad') as { userId: string, role?: string } : null;
-        const role = verify?.role || null;
         const userId= verify?.userId
         const user= await User.findOne({where:{id:userId}})
         

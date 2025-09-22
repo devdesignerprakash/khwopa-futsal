@@ -13,8 +13,9 @@ const Login = () => {
     phoneNumber: "",
     password: "",
   });
+ 
   const navigate = useNavigate();
-  const { loading, AuthExecution, clearError, validationErrors } = UseAuth<
+  const { loading,AuthExecution, clearError, validationErrors } = UseAuth<
     AuthResponse,
     LoginDTO
   >("/auth/login");
@@ -30,14 +31,13 @@ const Login = () => {
 
     try {
       const res = await AuthExecution(loginData);
-      if (res) {
-        toast.success(res.message);
-        if (res?.role == "admin") {
-          navigate("/admin");
-        } else {
-          navigate("/");
-        }
-      }
+       if(res.role=="admin"){
+        await navigate("/admin")
+       }
+       else{
+        navigate("/")
+       }
+      
     } catch (err: any) {
       // Use the error message from the caught error instead of the hook state
       toast.error(err.message || "Login failed");
