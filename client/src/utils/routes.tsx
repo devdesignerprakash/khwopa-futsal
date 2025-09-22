@@ -59,7 +59,7 @@ path:"/admin",
         element:<AdminDashboard/>
     },
     {
-        path:"adminBooking",
+        path:"booking",
         element:<AdminBooking/>
 
     }

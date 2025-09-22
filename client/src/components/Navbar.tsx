@@ -3,42 +3,31 @@
 
 import logo from '../assets/logo.png'
 import { Link, useNavigate} from 'react-router-dom'
-import { useEffect, useState } from 'react'
-import { useCheckLoggedIn } from '../hooks/UseStatus'
+import { useContext } from 'react'
 import { Button } from '@shadcn/components/ui/button'
 import api from '../utils/axiosInterceptor'
 import { toast } from 'react-toastify'
+import UserContext from '../context/UserContext'
 
 const Navbar = () => {
-    const [isLoggedIn, setIsLoggedIn]= useState<Boolean>(false)
-    const {checkStatus}=useCheckLoggedIn("auth/status")
-
-    useEffect(()=>{
-        checkStatus().then((res)=>{
-            setIsLoggedIn(res.isLoggedIn)
-        }
-        ).catch((err)=>{
-            console.log("Error checking login status:",err)
-            setIsLoggedIn(false)
-        })
-    },[])
+    const {isLoggedIn,setIsLoggedIn, setUser} = useContext(UserContext)
     const navigate=useNavigate()
     const handleLogout=async()=>{
         try{
             const response= await api.post("auth/logout",{}, { withCredentials: true });
+            if(response){
             setIsLoggedIn(false)
+            setUser(null)
             toast.success("Logged out successfully")
-            navigate("/")
-
+            navigate("/")}
         }
         catch(err){
             console.log("Error logging out:",err)
-        
+
         }
     }
-   
     return (
-        <div className=" w-fullb mx-auto bg-white shadow-lg p-2 m-2">
+        <div className=" w-full mx-auto bg-white shadow-lg p-2 m-2">
             <div className='flex items-center justify-between'>
                 <div>
                     <img src={logo} alt="logo" className='h-20 w-20 cursor-pointer' onClick={()=>navigate("/")}/>

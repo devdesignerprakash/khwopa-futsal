@@ -1,8 +1,9 @@
 import { verifyAdmin, verifyToken } from "../utils/token";
-import { BookingDTO, UpdateBookingDTO } from "../DTOs/booking.dto";
+import { BookingDTO} from "../DTOs/booking.dto";
 import { Booking } from "../models/booking.entity";
 import { BookingServices } from '../services/booking.services';
 import { Body, Controller, Delete, Get, Middlewares, Path, Post, Put, Route, SuccessResponse, Tags } from "tsoa";
+import { validationMiddleware } from "../utils/validator";
 
 @Route("booking")
 @Tags("Booking")
@@ -15,12 +16,15 @@ export class BookingController extends Controller {
     @Post("/create")
     @SuccessResponse("201", "Booking created successfully")
     @Middlewares(verifyToken, verifyAdmin)
+    @Middlewares(validationMiddleware(BookingDTO))
     public async createBooking(@Body() body: BookingDTO) {
 
         try {
+           
             const startTime = new Date(body.start_time)
             const endTime = new Date(body.end_time)
             const date = new Date(body.date)
+            console.log("all data of booking",date,startTime,endTime)
             if (startTime.getTime() === endTime.getTime()) {
                 this.setStatus(400)
                 return { message: "start time and end time cannot be same" }
@@ -57,7 +61,7 @@ export class BookingController extends Controller {
         try {
             const bookings = await Booking.find()
             this.setStatus(200)
-            return { message: "booking fetched successfully", data: bookings }
+            return { message: "booking fetched successfully",bookings }
         } catch (error) {
             console.log("booking controller error", error)
             this.setStatus(500)

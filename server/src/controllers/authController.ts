@@ -1,4 +1,4 @@
-import { LoginDto, RegisterDto } from "../DTOs/auth.dto";
+import { LoginDto, RegisterDto, UserDTO } from "../DTOs/auth.dto";
 import User from "../models/user.entity";
 import AuthServices from "../services/auth.services";
 import { Body, Controller, Get, Middlewares, Post, Request, Route, SuccessResponse, Tags} from "tsoa";
@@ -6,6 +6,7 @@ import bcrypt from 'bcryptjs'
 import { generateToken } from "../utils/token";
 import jwt from "jsonwebtoken";
 import { validationMiddleware } from "../utils/validator";
+import { toUserDTO } from "../utils/fetchUserDetails";
 
 
 @Route("auth")
@@ -69,7 +70,7 @@ export class AuthController extends Controller {
       const token = generateToken({ userId: existUser.id, role: existUser.role })
      this.setHeader("Set-Cookie", `token=${token}; HttpOnly; Path=/; Max-Age=${60 * 60 * 24}; SameSite=Lax`)
       this.setStatus(200)
-      return { message: "user logged in Successfully"}
+      return { message: "user logged in Successfully",role:existUser.role}
     } catch (error) {
       this.setStatus(500);
       return {
@@ -93,12 +94,12 @@ export class AuthController extends Controller {
   //check whether user is logged in or not
   @Get("/status")
   @SuccessResponse("200", "User is logged in")
-  public async checkStatus(@Request() req: { headers: { cookie?: string } }): Promise<{ isLoggedIn: boolean, role:string | null }> {
+  public async checkStatus(@Request() req: { headers: { cookie?: string } }): Promise<{ isLoggedIn: boolean, user:UserDTO |null}> {
     try {
         const cookiesHeader = req.headers.cookie;
         if (!cookiesHeader) {
             this.setStatus(200);
-            return { isLoggedIn: false, role: null };
+            return { isLoggedIn: false, user: null };
         }
 
         const tokenCookie = cookiesHeader
@@ -108,18 +109,20 @@ export class AuthController extends Controller {
         const token = tokenCookie?.split('=')[1];
         const verify = token ? jwt.verify(token, process.env.JWT_SECRET || 'mysuperheroismydad') as { userId: string, role?: string } : null;
         const role = verify?.role || null;
+        const userId= verify?.userId
+        const user= await User.findOne({where:{id:userId}})
         
-        if (token && token.trim())  {
+        if (token && token.trim()&&user)  {
             this.setStatus(200);
-            return { isLoggedIn: true,role };
+            return { isLoggedIn: true, user:toUserDTO(user) };
         }
 
         this.setStatus(200);
-        return { isLoggedIn: false,role: null };
+        return { isLoggedIn: false,user:null };
     } catch (error) {
         console.error('Error checking login status:', error);
         this.setStatus(500);
-        return { isLoggedIn: false,role: null };
+        return { isLoggedIn: false, user:null};
     }
 }
 }

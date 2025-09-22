@@ -20,7 +20,7 @@ const AdminNav = () => {
   const navItems = [
     { name: "Dashboard", href: "/admin", icon: Home },
     { name: "Users", href: "/admin/users", icon: Users },
-    { name: "Bookings", href: "/admin/adminBooking", icon: Calendar },
+    { name: "Bookings", href: "/admin/booking", icon: Calendar },
     { name: "Reports", href: "/admin/reports", icon: BarChart },
     { name: "Settings", href: "/admin/settings", icon: Settings },
     

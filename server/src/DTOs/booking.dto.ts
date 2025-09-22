@@ -1,9 +1,18 @@
 
+import { IsDateString, IsNotEmpty, IsString } from "class-validator"
 import { BookingStatus } from "../utils/status.enum"
 
-export interface BookingDTO{
-    start_time:string,
-    end_time:string,
+export class BookingDTO{
+    @IsNotEmpty({message:'you must provide start-time'})
+    @IsDateString()
+    start_time:string
+
+     @IsNotEmpty({message:'you must provide end-time'})
+     @IsDateString()
+    end_time:string
+
+    @IsNotEmpty({message:'you must provide date'})
+    @IsDateString()
     date:string
 }
 

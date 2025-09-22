@@ -40,3 +40,12 @@ export class LoginDto {
   @IsNotEmpty({ message: 'Password is required' })
   password!: string;
 }
+
+export interface UserDTO{
+    id:string
+    fullName:string
+    email:string
+    phoneNumber:string
+    address:string
+    role:Role
+}
