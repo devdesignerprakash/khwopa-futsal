@@ -3,8 +3,10 @@ import Navbar from "./Navbar.tsx";
 import Footer from "./Footer.tsx";
 
 
+
 const MainLayout = () => {
   const location = useLocation();
+  
   const hideFooterOn = ["/login", "/signup", "/forgot-password"];
   const shouldHideFooter = hideFooterOn.includes(location.pathname);
 

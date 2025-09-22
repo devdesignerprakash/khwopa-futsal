@@ -1,37 +1,10 @@
-import { useContext, useEffect, useState } from "react";
+
 import { Outlet } from "react-router-dom";
-import UserContext from "../context/UserContext";
+
 import AdminNav from "./AdminNav";
-import NotAuthorized from "../pages/NotAuthorize";
+
 
 const MainAdminLayout = () => {
-  const { isLoggedIn, user, loading } = useContext(UserContext);
-  const [showSpinner, setShowSpinner] = useState(true);
-
-  // Minimum spinner time after context finishes loading
-  useEffect(() => {
-    if (!loading) {
-      const timer = setTimeout(() => setShowSpinner(false), 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [loading]);
-
-  // Show spinner while loading OR during minimum delay
-  // Change: Use OR (||) instead of AND (&&)
-  if (loading || showSpinner) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-      </div>
-    );
-  }
-
-  // User fetched but not admin → show not authorized
-  if (!isLoggedIn || user?.role !== "admin") {
-    return <NotAuthorized />;
-  }
-
-  // User is admin → render layout
   return (
     <div className="flex h-screen">
       <AdminNav />

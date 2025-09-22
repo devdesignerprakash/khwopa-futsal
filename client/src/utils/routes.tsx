@@ -12,6 +12,8 @@ import Contact from "../pages/Contact";
 import MainAdminLayout from "../components/MainAdminLayout";
 import AdminDashboard from "../admin/AdminDashboard";
 import AdminBooking from "../admin/AdminBooking";
+import GuestRoute from "./guestRoutes";
+import AdminRoute from "./adminRoute";
 
 const router = createBrowserRouter([{
     path: "/",
@@ -37,6 +39,9 @@ const router = createBrowserRouter([{
 
     ],
 },
+{element:<GuestRoute/>,
+children:[
+
 {
     path:"/login",
     element:<Login/>
@@ -48,8 +53,11 @@ const router = createBrowserRouter([{
 {
     path:"/forget-password",
     element:<ForgetPassword/>
+}]
 },
 //admin routes
+{element:<AdminRoute/>,
+children:[
 {
 path:"/admin",
  element:<MainAdminLayout/>,
@@ -65,6 +73,8 @@ path:"/admin",
     }
  ]
  
+}
+]
 }
 ])
 
