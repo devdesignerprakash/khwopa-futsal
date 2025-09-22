@@ -5,9 +5,13 @@ import { Calendar, Users } from "lucide-react";
 import { useFetch } from "../hooks/useFetch";
 import type { BookingResponseDTO } from "../DTOs/bookingDTO";
 import CreateorEditBooking from "../components/CreateorEditBooking"; // Make sure this exists
+import api from "../utils/axiosInterceptor";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 function AdminBooking() {
   const { data, loading, error } = useFetch<{ message: string; bookings: BookingResponseDTO[] }>("/booking/all-bookings");
+  const navigate = useNavigate()
 
   const [allBookings, setAllBookings] = useState<BookingResponseDTO[]>([]);
 
@@ -16,11 +20,15 @@ function AdminBooking() {
       setAllBookings(data.bookings);
     }
   }, [data]);
-  console.log(allBookings)
-
-  const handleDelete = (id: string) => {
-    // Replace this with API call to delete booking
-    setAllBookings((prev) => prev.filter((booking) => booking.id !== id));
+  const handleDelete = async(id: string) => {
+    try{
+    const response=  await api.delete(`/booking/delete-booking/${id}`,{withCredentials:true})
+    if(response)
+      toast.success(response.data.message)
+      navigate(0)
+    }catch(error){
+      console.log('booking delete error',error)
+    }
   };
 const convertTime = (time: string) => {
   const date = new Date(time);
@@ -100,7 +108,7 @@ const convertTime = (time: string) => {
                     <Button
                       size="sm"
                       className="bg-red-500 hover:bg-red-600 text-white px-3 py-1"
-                      onClick={() => handleDelete(booking?.id)}
+                      onClick={() => handleDelete(booking.id)}
                     >
                       Delete
                     </Button>
