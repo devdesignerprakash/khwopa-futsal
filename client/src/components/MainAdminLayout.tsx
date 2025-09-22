@@ -8,7 +8,7 @@ const MainAdminLayout = () => {
   const { isLoggedIn, user, loading } = useContext(UserContext);
   const [showSpinner, setShowSpinner] = useState(true);
 
-  // Minimum spinner display time: 1 second
+  // Minimum spinner time after context finishes loading
   useEffect(() => {
     if (!loading) {
       const timer = setTimeout(() => setShowSpinner(false), 1000);
@@ -16,7 +16,8 @@ const MainAdminLayout = () => {
     }
   }, [loading]);
 
-  // Show spinner while loading or during minimum delay
+  // Show spinner while loading OR during minimum delay
+  // Change: Use OR (||) instead of AND (&&)
   if (loading || showSpinner) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -31,7 +32,6 @@ const MainAdminLayout = () => {
   }
 
   // User is admin → render layout
-  console.log("user from adminlayout", user);
   return (
     <div className="flex h-screen">
       <AdminNav />

@@ -7,8 +7,6 @@ import { generateToken } from "../utils/token";
 import jwt from "jsonwebtoken";
 import { validationMiddleware } from "../utils/validator";
 import { toUserDTO } from "../utils/fetchUserDetails";
-
-
 @Route("auth")
 @Tags("Auth")
 export class AuthController extends Controller {
@@ -56,7 +54,6 @@ export class AuthController extends Controller {
           {
             phoneNumber: body.phoneNumber
           }
-        
       })
       if (!existUser) {
         this.setStatus(404)
@@ -69,8 +66,9 @@ export class AuthController extends Controller {
       }
       const token = generateToken({ userId: existUser.id, role: existUser.role })
      this.setHeader("Set-Cookie", `token=${token}; HttpOnly; Path=/; Max-Age=${60 * 60 * 24}; SameSite=Lax`)
+     const {password,likes,bookings,...user}=existUser
       this.setStatus(200)
-      return { message: "user logged in Successfully",role:existUser.role}
+      return { message: "user logged in Successfully",user, isLoggedIn:true}
     } catch (error) {
       this.setStatus(500);
       return {

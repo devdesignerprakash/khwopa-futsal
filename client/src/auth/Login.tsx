@@ -4,9 +4,10 @@ import { Button } from "@shadcn/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import type { AuthResponse, LoginDTO } from "../DTOs/authDTO";
 import { UseAuth } from "../hooks/useAuth";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { toast } from "react-toastify";
 import { Alert, AlertDescription } from "@shadcn/components/ui/alert";
+import UserContext from "../context/UserContext";
 
 const Login = () => {
   const [loginData, setLoginData] = useState<LoginDTO>({
@@ -15,10 +16,12 @@ const Login = () => {
   });
  
   const navigate = useNavigate();
+  const {setUser,setIsLoggedIn}=useContext(UserContext)
   const { loading,AuthExecution, clearError, validationErrors } = UseAuth<
     AuthResponse,
     LoginDTO
   >("/auth/login");
+  // const {isLoggedIn,setUser,user}=useContext(UserContext)
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -31,13 +34,12 @@ const Login = () => {
 
     try {
       const res = await AuthExecution(loginData);
-       if(res.role=="admin"){
-        await navigate("/admin")
-       }
-       else{
-        navigate("/")
-       }
-      
+      if(res){
+        toast.success(res.message)
+        setUser(res?.user)
+        setIsLoggedIn(res.isLoggedIn)
+          navigate("/")
+      }
     } catch (err: any) {
       // Use the error message from the caught error instead of the hook state
       toast.error(err.message || "Login failed");
