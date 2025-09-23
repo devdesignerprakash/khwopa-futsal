@@ -35,7 +35,6 @@ const CreateorEditBooking = () => {
   const [openCalendar, setOpenCalendar] = useState(false);
   const navigate= useNavigate()
   const [bookingData, setBookingData] = useState<CreateorEditBookingDTO>({
-    id:"",
     start_time: "",
     end_time: "",
     date: "",

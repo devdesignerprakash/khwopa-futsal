@@ -1,8 +1,8 @@
-import { Column, Entity, OneToOne } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne} from "typeorm";
 import { BaseEntity } from "./base.entity";
 import { IsNotEmpty } from "class-validator";
-import { BookedByUser } from "./bookedbyUser.entity";
 import { BookingStatus } from "../utils/status.enum";
+import User from "./user.entity";
 
 @Entity()
 export class Booking extends BaseEntity {
@@ -23,11 +23,17 @@ export class Booking extends BaseEntity {
         {
             type: 'enum',
             enum: BookingStatus,
-            default: BookingStatus.NOT_BOOKED
+            default: BookingStatus.PENDING
         }
     )
     bookingStatus: BookingStatus
-    @OneToOne(() => BookedByUser, bookedByUser => bookedByUser.booking)
-    bookedBy?: BookedByUser[];
+
+   
+    @ManyToOne(() => User, user =>user.bookings, {onDelete:"SET NULL"})
+    @JoinColumn({name:'user_id'})
+     user?: User |null;
+
+    @Column({nullable:true})
+    phoneNumber?:string
 }
 
