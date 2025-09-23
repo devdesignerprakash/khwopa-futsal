@@ -16,4 +16,5 @@ export interface CreateorEditBookingDTO{
     start_time: string;
   end_time: string;
   date: string;
+  phoneNumber?:string
 }

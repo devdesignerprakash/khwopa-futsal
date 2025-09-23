@@ -167,44 +167,5 @@ export class BookingController extends Controller {
             return { message: "internal server error" }
         }
     }
-     @Post("/admin/create")
-    @SuccessResponse("201", "Booking created successfully")
-    @Middlewares(verifyToken)
-    @Middlewares(validationMiddleware(BookingDTO))
-    public async createBookingByAdmin(@Request() req:any, @Body() body: BookingDTO) {
-        try {
-           
-            const startTime = new Date(body.start_time)
-            const endTime = new Date(body.end_time)
-            const date = new Date(body.date)
-            if (startTime.getTime() === endTime.getTime()) {
-                this.setStatus(400)
-                return { message: "start time and end time cannot be same" }
-            }
-            if (startTime.getTime() > endTime.getTime()) {
-                this.setStatus(400)
-                return { message: "start time cannot be greater than end time" }
-            }
-            const existBooking = await Booking.createQueryBuilder("booking").where({ date: date }).andWhere({ start_time: startTime }).andWhere({ end_time: endTime }).getOne()
-            if (existBooking) {
-                this.setStatus(400)
-                return { message: "booking already exist" }
-            }
-            const user= await User.findOneBy({id:req.userId})
-            let IsAdmin=false
-            if(user?.role=="admin"){
-                IsAdmin=true
-            }
-
-            const booking = await BookingServices.createBooking(body,req.userId,IsAdmin)
-            this.setStatus(201)
-            return { message: "booking created successfully", data: booking }
-
-        } catch (error) {
-            console.log("booking controller error", error)
-            this.setStatus(500)
-            return { message: "internal server error" }
-        }
-
-    }
+    
 }

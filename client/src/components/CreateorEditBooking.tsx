@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { useContext, useState, type FormEvent } from "react";
 import { Button } from "@shadcn/components/ui/button";
 import { Calendar } from "@shadcn/components/ui/calendar";
 import { format } from "date-fns";
@@ -10,7 +10,7 @@ import {
   DialogTrigger,
   DialogFooter,
 } from "@shadcn/components/ui/dialog";
-import { Clock, CalendarIcon } from "lucide-react";
+import { Clock, CalendarIcon, PhoneIcon} from "lucide-react";
 import { Label } from "@shadcn/components/ui/label";
 import {  type CreateorEditBookingDTO } from "../DTOs/bookingDTO";
 import {
@@ -27,9 +27,11 @@ import api from "../utils/axiosInterceptor";
 import { convertTime } from "../utils/conversionTime";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import UserContext from "../context/UserContext";
 
 
 const CreateorEditBooking = () => {
+  const {user}=useContext(UserContext)
  
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [openCalendar, setOpenCalendar] = useState(false);
@@ -38,6 +40,7 @@ const CreateorEditBooking = () => {
     start_time: "",
     end_time: "",
     date: "",
+    phoneNumber:undefined
   });
 
   const [startTimeValue, setStartTimeValue] = useState<string>(""); // 24h for Select
@@ -72,6 +75,12 @@ const handleStartTime = (value24: string) => {
   });
 };
 
+const handlePhoneNumberChange=(e:React.ChangeEvent<HTMLInputElement>)=>{
+  setBookingData((prev)=>({
+    ...prev,
+    phoneNumber:e.target.value
+  }))
+}
   // Handle Date Selection
   const handleDateSelection = (date: Date) => {
     setSelectedDate(date);
@@ -94,7 +103,6 @@ const handleStartTime = (value24: string) => {
 
    }
     catch(err){
-      toast.error(err?.response?.data?.message)
       console.log('create booking error',err)
     }
   };
@@ -115,6 +123,28 @@ const handleStartTime = (value24: string) => {
         </DialogHeader>
 
         <form className="space-y-5 mt-4" onSubmit={handleSubmit}>
+          <div className="space-y-1">
+            <Label className="text-sm font-medium">Booking Date</Label>
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full justify-start text-left font-normal"
+              onClick={() => setOpenCalendar(true)}
+            >
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              {selectedDate ? format(selectedDate, "PPP") : "Select a date"}
+            </Button>
+            {openCalendar && (
+              <div className="mt-2 border rounded-md shadow-sm">
+                <Calendar
+                  mode="single"
+                  selected={selectedDate}
+                  onSelect={handleDateSelection}
+                  disabled={{before:new Date()}}
+                />
+              </div>
+            )}
+          </div>
           {/* Start Time */}
           <div className="space-y-1">
             <Label htmlFor="start_time" className="text-sm font-medium">
@@ -138,7 +168,6 @@ const handleStartTime = (value24: string) => {
               </Select>
             </div>
           </div>
-
           {/* End Time */}
           <div className="space-y-1">
             <Label htmlFor="end_time" className="text-sm font-medium">
@@ -150,30 +179,19 @@ const handleStartTime = (value24: string) => {
             </div>
           </div>
 
-          {/* Booking Date */}
-          <div className="space-y-1">
-            <Label className="text-sm font-medium">Booking Date</Label>
-            <Button
-              type="button"
-              variant="outline"
-              className="w-full justify-start text-left font-normal"
-              onClick={() => setOpenCalendar(true)}
-            >
-              <CalendarIcon className="mr-2 h-4 w-4" />
-              {selectedDate ? format(selectedDate, "PPP") : "Select a date"}
-            </Button>
-            {openCalendar && (
-              <div className="mt-2 border rounded-md shadow-sm">
-                <Calendar
-                  mode="single"
-                  selected={selectedDate}
-                  onSelect={handleDateSelection}
-                  disabled={{before:new Date()}}
-                />
-              </div>
-            )}
+          {/* phoneNumber*/}
+          {user&&user.role=="admin"?(
+           <div className="space-y-1">
+            <Label htmlFor="end_time" className="text-sm font-medium">
+              Phone Number 
+            </Label>
+            <div className="relative">
+              <PhoneIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+              <Input value={bookingData.phoneNumber} className="pl-10" onChange={handlePhoneNumberChange}  />
+            </div>
           </div>
-
+          ):null}
+          {/* end of phoneNumber */}
           {/* Actions */}
           <DialogFooter>
             <Button

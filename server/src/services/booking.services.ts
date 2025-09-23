@@ -6,7 +6,7 @@ export class BookingServices {
     public static async createBooking(data: BookingDTO, userId: string, isAdmin: boolean) {
         let user: User | null = null
 
-        if (!isAdmin) {
+        if (isAdmin) {
             if (data.phoneNumber) {
                 // check if phoneNumber exists in DB
                 const existingUser = await User.findOneBy({ phoneNumber: data.phoneNumber });

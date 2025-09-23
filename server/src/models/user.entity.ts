@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs";
 import { IsEmail, IsNotEmpty, Length } from 'class-validator'
 import { Like } from "./like.entity";
 import { Booking } from "./booking.entity";
+import { OTP } from "./otp.entity";
 
 export enum Role {
   USER = "user",
@@ -39,8 +40,18 @@ export enum Role {
   })
   role: Role;
 
+  @Column({type:"boolean",default:false})
+  IsEmailVerified: boolean;
+
+  @Column({type:"boolean", default:false})
+  isUserVerified:boolean
+
+
   @OneToMany(() => Booking, booking => booking.user)
   bookings?: Booking[];
+
+  @OneToMany(() => OTP, otp => otp.user, { cascade: true })
+  otps?: OTP[]
 
   @OneToMany(() => Like, like => like.user)
   likes?: Like[]

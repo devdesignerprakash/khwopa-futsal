@@ -14,30 +14,33 @@ function AdminBooking() {
   const navigate = useNavigate()
 
   const [allBookings, setAllBookings] = useState<BookingResponseDTO[]>([]);
+  
 
   useEffect(() => {
     if (data?.bookings) {
       setAllBookings(data.bookings);
     }
   }, [data]);
-  const handleDelete = async(id: string) => {
-    try{
-    const response=  await api.delete(`/booking/delete-booking/${id}`,{withCredentials:true})
-    if(response)
-      toast.success(response.data.message)
+
+  console.log(allBookings)
+  const handleDelete = async (id: string) => {
+    try {
+      const response = await api.delete(`/booking/delete-booking/${id}`, { withCredentials: true })
+      if (response)
+        toast.success(response.data.message)
       navigate(0)
-    }catch(error){
-      console.log('booking delete error',error)
+    } catch (error) {
+      console.log('booking delete error', error)
     }
   };
-const convertTime = (time: string) => {
-  const date = new Date(time);
-  return date.toLocaleTimeString([], {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: true
-  });
-};
+  const convertTime = (time: string) => {
+    const date = new Date(time);
+    return date.toLocaleTimeString([], {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    });
+  };
 
   return (
     <div className="bg-gray-100 min-h-screen p-6">
@@ -79,9 +82,9 @@ const convertTime = (time: string) => {
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-4 py-2 text-left text-gray-600">Id</th>
+                <th className="px-4 py-2 text-left text-gray-600">Date</th>
                 <th className="px-4 py-2 text-left text-gray-600">Start Time</th>
                 <th className="px-4 py-2 text-left text-gray-600">End Time</th>
-                <th className="px-4 py-2 text-left text-gray-600">Date</th>
                 <th className="px-4 py-2 text-left text-gray-600">Status</th>
                 <th className="px-4 py-2 text-left text-gray-600">Actions</th>
               </tr>
@@ -90,11 +93,12 @@ const convertTime = (time: string) => {
               {allBookings.map((booking, index) => (
                 <tr key={booking.id} className="border-b hover:bg-gray-50">
                   <td className="px-4 py-2 text-sm text-gray-700">{index + 1}</td>
+                  <td className="px-4 py-2 text-sm text-gray-700">{new Date(booking.date).toLocaleDateString()}</td>
                   <td className="px-4 py-2 text-sm text-gray-700">{convertTime(booking.start_time)}</td>
                   <td className="px-4 py-2 text-sm text-gray-700">{convertTime(booking.end_time)}</td>
-                  <td className="px-4 py-2 text-sm text-gray-700">{new Date(booking.date).toLocaleDateString()}</td>
 
-                  
+
+
                   <td className="px-4 py-2">
                     <span
                       className={`px-2 py-1 rounded-full text-xs font-medium text-white ${getStatusColor(
@@ -104,7 +108,21 @@ const convertTime = (time: string) => {
                       {booking.bookingStatus}
                     </span>
                   </td>
-                  <td className="px-4 py-2">
+                  <td className="flex gap-2 px-4 py-2">
+                    <Button
+                      size="sm"
+                      className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1"
+                      onClick={() => handleDelete(booking.id)}
+                    >
+                      Edit
+                    </Button>
+                     <Button
+                      size="sm"
+                      className="bg-green-500 hover:bg-green-600 text-white px-3 py-1"
+                      onClick={() => handleDelete(booking.id)}
+                    >
+                      Approved
+                    </Button>
                     <Button
                       size="sm"
                       className="bg-red-500 hover:bg-red-600 text-white px-3 py-1"
