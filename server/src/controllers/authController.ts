@@ -29,16 +29,15 @@ export class AuthController extends Controller {
         this.setStatus(400);
         return { message: "User already exists" };
       }
-
-      // Register new user
       const newUser = await AuthServices.registerUser(body);
       const otp= otpGenerator()
-      sendEmail(newUser.email)
+      sendEmail(newUser.email,otp)
+      await AuthServices.creatOtp(otp,newUser.id)
       const { password, ...userDetails } = newUser
       this.setStatus(201);
       return {
         message: "User registered successfully",
-        data: userDetails
+        userId:userDetails.id
       }
     } catch (error) {
       this.setStatus(500);

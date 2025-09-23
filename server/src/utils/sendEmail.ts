@@ -1,21 +1,20 @@
 import nodemailer from 'nodemailer'
 
-export async function sendEmail(email:string){
-    const transporter = nodemailer.createTransport({
-  service: "gmail",
+export async function sendEmail(email:string,otp:string){
+  const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_SERVER,
+  port: 587,
+  secure: false, // true for 465, false for other ports
   auth: {
-    type: "OAuth2",
-    user: process.env.GMAIL_USER,
-    clientId: process.env.GMAIL_CLIENT_ID,
-    clientSecret: process.env.GMAIL_CLIENT_SECRET,
-    // Nodemailer can fetch accessToken automatically
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_SECRET,
   },
 });
 
 await  transporter.sendMail({
-  from: `"My App" <${process.env.GMAIL_USER}>`,
+  from: process.env.SENDER_MAIL,
   to: email,
-  subject: "Hello with OAuth2",
-  text: "This email was sent using Gmail OAuth2!",
+  subject: "OTP",
+  text: `your otp will expires in 5 minutes: ${otp}`,
 });
 }

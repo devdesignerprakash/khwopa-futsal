@@ -47,6 +47,7 @@ export default function Schedule() {
       setSchedule(Object.values(tempSchedule));
     }
   }, [data]);
+  console.log(schedule)
 
   const handleBooking = (day: DaySchedule, slot: Slot) => {
     alert(`Booking requested for ${day.day} ${day.date}, ${slot.start_time} - ${slot.end_time}`);

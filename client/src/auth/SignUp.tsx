@@ -37,7 +37,7 @@ const SignUp = () => {
       const res = await AuthExecution(registerData);
       if (res) {
         toast.success(res.message);
-        navigate("/");
+        navigate("/verify-otp",{state:{userId:res?.userId}});
       }
     } catch (err: any) {
       // Use the error message from the caught error instead of the hook state

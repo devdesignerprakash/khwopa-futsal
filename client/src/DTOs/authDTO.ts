@@ -18,6 +18,7 @@ export interface AuthResponse{
     message:string
     isLoggedIn:boolean
     user:LoggedInUserResponseDTO
+    userId?:string
 }
 export interface RegisterDTO{
     "phoneNumber":string,

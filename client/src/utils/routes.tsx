@@ -14,6 +14,7 @@ import AdminDashboard from "../admin/AdminDashboard";
 import AdminBooking from "../admin/AdminBooking";
 import GuestRoute from "./guestRoutes";
 import AdminRoute from "./adminRoute";
+import VerifyOTP from "../pages/VerifyOTP";
 
 const router = createBrowserRouter([{
     path: "/",
@@ -53,6 +54,9 @@ children:[
 {
     path:"/forget-password",
     element:<ForgetPassword/>
+},{
+    path:"/verify-otp",
+    element:<VerifyOTP/>
 }]
 },
 //admin routes
