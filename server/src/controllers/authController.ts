@@ -7,6 +7,8 @@ import { generateToken } from "../utils/token";
 import jwt from "jsonwebtoken";
 import { validationMiddleware } from "../utils/validator";
 import { toUserDTO } from "../utils/fetchUserDetails";
+import { otpGenerator } from "../utils/OTPGenerator";
+import { sendEmail } from "../utils/sendEmail";
 @Route("auth")
 @Tags("Auth")
 export class AuthController extends Controller {
@@ -30,6 +32,8 @@ export class AuthController extends Controller {
 
       // Register new user
       const newUser = await AuthServices.registerUser(body);
+      const otp= otpGenerator()
+      sendEmail(newUser.email)
       const { password, ...userDetails } = newUser
       this.setStatus(201);
       return {
