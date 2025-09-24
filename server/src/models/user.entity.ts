@@ -1,7 +1,6 @@
 import { Entity, Column, BeforeInsert, OneToMany } from "typeorm";
 import { BaseEntity } from "./base.entity";
 import bcrypt from "bcryptjs";
-import { IsEmail, IsNotEmpty, Length } from 'class-validator'
 import { Like } from "./like.entity";
 import { Booking } from "./booking.entity";
 import { OTP } from "./otp.entity";
@@ -45,6 +44,9 @@ export enum Role {
 
   @Column({type:"boolean", default:false})
   isUserVerified:boolean
+
+  @Column({type:"boolean", default:true})
+  isActive:boolean
 
 
   @OneToMany(() => Booking, booking => booking.user)

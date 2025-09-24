@@ -1,7 +1,7 @@
 import { LoginDto, RegisterDto, UserDTO } from "../DTOs/auth.dto";
 import User from "../models/user.entity";
 import AuthServices from "../services/auth.services";
-import { Body, Controller, Get, Middlewares, Post, Request, Route, SuccessResponse, Tags} from "tsoa";
+import { Body, Controller, Get, Middlewares, Path, Post, Request, Route, SuccessResponse, Tags} from "tsoa";
 import bcrypt from 'bcryptjs'
 import { generateToken } from "../utils/token";
 import jwt from "jsonwebtoken";
@@ -9,6 +9,7 @@ import { validationMiddleware } from "../utils/validator";
 import { toUserDTO } from "../utils/fetchUserDetails";
 import { otpGenerator } from "../utils/OTPGenerator";
 import { sendEmail } from "../utils/sendEmail";
+import { OTP } from "../models/otp.entity";
 @Route("auth")
 @Tags("Auth")
 export class AuthController extends Controller {
@@ -124,6 +125,25 @@ export class AuthController extends Controller {
         this.setStatus(500);
         return { isLoggedIn: false, user:null};
     }
+}
+
+@Post('/verify-otp/:id')
+@SuccessResponse("200", "OTP verified")
+public async verificationOTP(@Path() id:string,@Body() body:{otp:string}){
+  try{
+    const otpverify= await AuthServices.verifyOtp(id, body.otp)
+  if(otpverify.message==="OTP verified"){
+    await OTP.update({otp:body.otp}, {isUsed:true})
+    const user= await User.findOne({where:{id:id}})
+    await User.update({id:id},{IsEmailVerified:true})
+  }
+  this.setStatus(200)
+  return {message:otpverify.message}
+}catch(error){
+  console.log("verify otp error", error)
+  this.setStatus(500)
+  return {message:"internal server error"}
+}
 }
 }
 
