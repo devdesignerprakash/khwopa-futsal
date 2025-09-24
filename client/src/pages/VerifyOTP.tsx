@@ -46,11 +46,11 @@ const [otp, setOtp] = useState<string>("")
     let mergedOtp=""
     userEnteredOtp.forEach((item)=>{
       mergedOtp= mergedOtp.concat(item)
+       setOtp(mergedOtp)
     })
-    if(mergedOtp.length<6){
+    if(otp.length<6){
       return
     }
-    setOtp(mergedOtp)
    const response= await api.post(`/auth/verify-otp/${userId}`,{otp:otp})
    console.log(response)
   }

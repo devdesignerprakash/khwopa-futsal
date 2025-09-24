@@ -40,7 +40,7 @@ export enum Role {
   role: Role;
 
   @Column({type:"boolean",default:false})
-  IsEmailVerified: boolean;
+  isEmailVerified: boolean;
 
   @Column({type:"boolean", default:false})
   isUserVerified:boolean

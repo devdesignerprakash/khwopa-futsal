@@ -31,20 +31,46 @@ class AuthServices {
     //create otp end
 
     //verify otp
-    public static async verifyOtp(id:string,otp: string){
-        const validateOtp = await OTP.findOne({ where: { otp: otp, user: { id: id} } })
-        if (!validateOtp) {
-            return { message: "Invalid OTP" }
-        }
-        if (validateOtp.isUsed) {
-            return { message: "OTP already used" }
-        }
-        const expiryStatus = new Date(validateOtp?.expiresAt ?? 0).getTime() < Date.now();
-        if (expiryStatus) {
-            return { message: "OTP expired" }
-        }
-        return { message: "OTP verified" }
+   public static async verifyOtp(userId: string, otp: string) {
+  try {
+    // Validate inputs
+    if (!userId || !otp) {
+      return { success: false, message: "User ID and OTP are required" };
     }
+
+    // Look up OTP for the user
+    const validateOtp = await OTP.findOne({
+      where: {
+        otp,
+        user: { id: userId },
+      },
+      relations: ["user"],
+    });
+
+    if (!validateOtp) {
+      return { success: false, message: "Invalid OTP" };
+    }
+
+    if (validateOtp.isUsed) {
+      return { success: false, message: "OTP already used" };
+    }
+
+    if (new Date(validateOtp.expiresAt??0).getTime() < Date.now()) {
+      return { success: false, message: "OTP expired" };
+    }
+   
+    // ✅ If we reach here, OTP is valid
+    // Optionally mark it as used
+    validateOtp.isUsed = true;
+    await validateOtp.save();
+    return { success: true, message: "OTP verified successfully", user: validateOtp.user };
+
+  } catch (error) {
+    console.error("Error verifying OTP:", error);
+    return { success: false, message: "Internal server error" };
+  }
+}
+
     //verifyh otp end
 }
 
