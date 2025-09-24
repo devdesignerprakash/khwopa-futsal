@@ -1,10 +1,60 @@
 import { Input } from "@shadcn/components/ui/input";
-import { useLocation} from "react-router-dom";
+
+import { useRef, useState, type ChangeEvent } from "react";
+import { useLocation } from "react-router-dom";
+import api from "../utils/axiosInterceptor";
 
 const VerifyOTP = () => {
-    const location= useLocation()
-    const {userId}=location.state || null
-    console.log(userId)
+  const location = useLocation();
+  const { userId } = location.state || {};
+const [userEnteredOtp, setUserEnteredOtp] = useState<string[]>(Array(6).fill(""));
+const [otp, setOtp] = useState<string>("")
+  const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
+  const handleInputChange = (index: number, e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+
+    // Only allow 1 character
+    if (value.length > 1) return;
+     setUserEnteredOtp(prev => {
+    const newOtp = [...prev];
+    newOtp[index] = value;
+    return newOtp;
+  }); 
+    if (value && inputRefs.current[index + 1]) {
+      inputRefs.current[index + 1]?.focus();
+    }
+  };
+
+
+  const handleKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Backspace" && !e.currentTarget.value && inputRefs.current[index - 1]) {
+      if (e.key === "Backspace") {
+    setUserEnteredOtp(prev => {
+      const newOtp = [...prev];
+      newOtp[index] = "";
+      return newOtp;
+    });
+
+      // Move focus to previous input if Backspace is pressed on empty input
+      inputRefs.current[index - 1]?.focus();
+    }
+  }
+}
+   
+  const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    let mergedOtp=""
+    userEnteredOtp.forEach((item)=>{
+      mergedOtp= mergedOtp.concat(item)
+    })
+    if(mergedOtp.length<6){
+      return
+    }
+    setOtp(mergedOtp)
+   const response= await api.post(`/auth/verify-otp/${userId}`,{otp:otp})
+   console.log(response)
+  }
+
   return (
     <div className="max-w-md mx-auto text-center bg-white px-4 sm:px-8 py-10 rounded-xl shadow">
       <header className="mb-8">
@@ -13,35 +63,20 @@ const VerifyOTP = () => {
           Enter the 6-digit verification code that was sent to your Email.
         </p>
       </header>
-      <form id="otp-form">
+      <form id="otp-form" onSubmit={handleSubmit}>
         <div className="flex items-center justify-center gap-3">
-          <Input
-            type="text"
-            className="w-14 h-14 text-center text-2xl font-extrabold text-slate-900 bg-slate-100 border border-transparent hover:border-slate-200 appearance-none rounded p-4 outline-none focus:bg-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
-            pattern="\d*"
-            max={1}
-          />
-          <Input
-            type="text"
-            className="w-14 h-14 text-center text-2xl font-extrabold text-slate-900 bg-slate-100 border border-transparent hover:border-slate-200 appearance-none rounded p-4 outline-none focus:bg-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
-            max="1"
-          />
-          <Input
-            type="text"
-            className="w-14 h-14 text-center text-2xl font-extrabold text-slate-900 bg-slate-100 border border-transparent hover:border-slate-200 appearance-none rounded p-4 outline-none focus:bg-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
-          />
-          <Input
-            type="text"
-            className="w-14 h-14 text-center text-2xl font-extrabold text-slate-900 bg-slate-100 border border-transparent hover:border-slate-200 appearance-none rounded p-4 outline-none focus:bg-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
-          />
-          <Input
-            type="text"
-            className="w-14 h-14 text-center text-2xl font-extrabold text-slate-900 bg-slate-100 border border-transparent hover:border-slate-200 appearance-none rounded p-4 outline-none focus:bg-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
-          />
-          <Input
-            type="text"
-            className="w-14 h-14 text-center text-2xl font-extrabold text-slate-900 bg-slate-100 border border-transparent hover:border-slate-200 appearance-none rounded p-4 outline-none focus:bg-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
-          />
+          {[...Array(6)].map((_, i) => (
+            <Input
+              key={i}
+              type="text"
+              maxLength={1}
+              pattern="\d*"
+              ref={(el) => void (inputRefs.current[i] = el)}
+              onChange={(e) => handleInputChange(i, e)}
+              onKeyDown={(e) => handleKeyDown(i, e)}
+              className="w-14 h-14 text-center text-2xl font-extrabold text-slate-900 bg-slate-100 border border-transparent hover:border-slate-200 appearance-none rounded p-4 outline-none focus:bg-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
+            />
+          ))}
         </div>
         <div className="max-w-[260px] mx-auto mt-4">
           <button
@@ -54,10 +89,7 @@ const VerifyOTP = () => {
       </form>
       <div className="text-sm text-slate-500 mt-4">
         Didn't receive code?{" "}
-        <a
-          className="font-medium text-indigo-500 hover:text-indigo-600"
-          href="#0"
-        >
+        <a className="font-medium text-indigo-500 hover:text-indigo-600" href="#0">
           Resend
         </a>
       </div>
