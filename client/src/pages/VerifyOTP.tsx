@@ -1,14 +1,20 @@
 import { Input } from "@shadcn/components/ui/input";
 
 import { useRef, useState, type ChangeEvent } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import api from "../utils/axiosInterceptor";
+import { toast } from "react-toastify";
+import type { AxiosError } from "axios";
+
+interface ApiError {
+  message: string;
+}
 
 const VerifyOTP = () => {
   const location = useLocation();
+  const navigate=useNavigate()
   const { userId } = location.state || {};
 const [userEnteredOtp, setUserEnteredOtp] = useState<string[]>(Array(6).fill(""));
-const [otp, setOtp] = useState<string>("")
   const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
   const handleInputChange = (index: number, e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -43,16 +49,22 @@ const [otp, setOtp] = useState<string>("")
    
   const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    let mergedOtp=""
-    userEnteredOtp.forEach((item)=>{
-      mergedOtp= mergedOtp.concat(item)
-       setOtp(mergedOtp)
-    })
-    if(otp.length<6){
+    let mergedOtp=userEnteredOtp.join("")
+    console.log(mergedOtp)
+    if(mergedOtp.length<6){
       return
     }
-   const response= await api.post(`/auth/verify-otp/${userId}`,{otp:otp})
-   console.log(response)
+    try{
+       const response= await api.post(`/auth/verify-otp/${userId}`,{otp:mergedOtp})
+       if(response){
+        toast.success(response.data.message)
+        navigate("/")
+       }
+    }
+    catch(error){
+      const err=error as AxiosError<ApiError>
+      toast.error(err.response?.data?.message || "Invalid OTP")
+    }
   }
 
   return (
