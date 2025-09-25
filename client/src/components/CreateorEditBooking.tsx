@@ -98,7 +98,7 @@ const handlePhoneNumberChange=(e:React.ChangeEvent<HTMLInputElement>)=>{
      const response = await api.post("/booking/create", bookingData);
      if(response){
       toast.success(response.data.message)
-      navigate(0)
+      // navigate(0)
      }
 
    }
@@ -180,7 +180,7 @@ const handlePhoneNumberChange=(e:React.ChangeEvent<HTMLInputElement>)=>{
           </div>
 
           {/* phoneNumber*/}
-          {user&&user.role=="admin"?(
+          {user&&user.role=="admin" || !user?(
            <div className="space-y-1">
             <Label htmlFor="end_time" className="text-sm font-medium">
               Phone Number 

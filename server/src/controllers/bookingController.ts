@@ -16,11 +16,11 @@ export class BookingController extends Controller {
  */
     @Post("/create")
     @SuccessResponse("201", "Booking created successfully")
-    @Middlewares(verifyToken)
     @Middlewares(validationMiddleware(BookingDTO))
     public async createBooking(@Request() req: any, @Body() body: BookingDTO) {
-
         try {
+            const user = await User.findOneBy({ id: req.userId });
+            const isAdmin = user?.role === "admin" || false;
             const startTime = new Date(body.start_time)
             const endTime = new Date(body.end_time)
             const date = new Date(body.date)
@@ -37,20 +37,14 @@ export class BookingController extends Controller {
                 this.setStatus(400)
                 return { message: "booking already exist" }
             }
-            const user = await User.findOneBy({ id: req.userId })
-            let isAdmin = false
-            if (user?.role == "admin") {
-                isAdmin = true
-            }
-
             const booking = await BookingServices.createBooking(body, req.userId, isAdmin, user?.isUserVerified ?? false)
             this.setStatus(201)
             return { message: "booking created successfully", data: booking }
 
-        } catch (error) {
+        } catch (error:any) {
             console.log("booking controller error", error)
             this.setStatus(500)
-            return { message: "internal server error" }
+            return { message: error.message }
         }
 
     }

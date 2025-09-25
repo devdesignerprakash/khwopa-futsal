@@ -5,6 +5,7 @@ import swaggerUi from "swagger-ui-express";
 import swaggerDocument from './swagger/swagger.json'
 import {RegisterRoutes} from '../build/routes/routes'
 import cookieParser from 'cookie-parser'
+import { globalErrorHandler } from './utils/globalErrorHandler';
 
 // import swaggerDocument from ""
 
@@ -18,6 +19,7 @@ app.use(cors({
 app.use(express.json())
 app.use(cookieParser())
 app.use(express.urlencoded({extended:true}))
+app.use(globalErrorHandler)
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 RegisterRoutes(app)
