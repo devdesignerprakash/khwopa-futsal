@@ -15,6 +15,7 @@ import AdminBooking from "../admin/AdminBooking";
 import GuestRoute from "./guestRoutes";
 import AdminRoute from "./adminRoute";
 import VerifyOTP from "../pages/VerifyOTP";
+import AllUsers from "../admin/AllUsers";
 
 const router = createBrowserRouter([{
     path: "/",
@@ -74,6 +75,10 @@ path:"/admin",
         path:"booking",
         element:<AdminBooking/>
 
+    },
+    {
+        path:"users",
+        element:<AllUsers/>
     }
  ]
  
