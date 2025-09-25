@@ -1,5 +1,5 @@
 
-import { IsDateString, IsNotEmpty, IsOptional, IsPhoneNumber, IsString, Length } from "class-validator"
+import { IsDateString, IsNotEmpty,IsOptional,Length, ValidateIf } from "class-validator"
 import { BookingStatus } from "../utils/status.enum"
 
 export class BookingDTO{
@@ -14,10 +14,12 @@ export class BookingDTO{
     @IsNotEmpty({message:'you must provide date'})
     @IsDateString()
     date:string
+    
+    
     @IsOptional()
     @Length(10,10,{message:"phone number must be ten digits"})
     phoneNumber?:string
-}
+} 
 
 
 
